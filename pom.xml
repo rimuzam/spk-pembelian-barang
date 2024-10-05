@@ -11,4 +11,48 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>com.spk.pembelian_barang.Pembelian_barang</exec.mainClass>
     </properties>
+    <dependencies>
+        <!-- FlatLaf -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
+        <!-- FlatLaf Extras -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-extras</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
+        <!-- FlatLaf Fonts Roboto -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-fonts-roboto</artifactId>
+            <version>2.137</version>
+        </dependency>
+        
+        <!-- jSVG -->
+        <dependency>
+            <groupId>io.github.bweng20</groupId>
+            <artifactId>jSVG</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- MigLayout Core -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-core</artifactId>
+            <version>5.3</version>
+        </dependency>
+
+        <!-- MigLayout Swing -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>5.3</version>
+        </dependency>
+        
+    </dependencies>
 </project>
