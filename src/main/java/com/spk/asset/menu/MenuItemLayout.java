@@ -1,4 +1,4 @@
-package com.spk.menu;
+package com.spk.asset.menu;
 
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Component;

@@ -1,5 +1,6 @@
 package com.spk.application.form;
 
+import com.spk.application.form.Decision.FormDecision;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.util.UIScale;
@@ -16,11 +17,13 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import com.spk.application.Application;
-import com.spk.application.form.other.FormDashboard;
-import com.spk.application.form.other.FormInbox;
-import com.spk.application.form.other.FormRead;
-import com.spk.menu.Menu;
-import com.spk.menu.MenuAction;
+import com.spk.application.form.criteria.FormCriteria;
+import com.spk.application.form.alternative.FormAlternative;
+import com.spk.application.form.Evaluation.FormEvaluation;
+import com.spk.application.form.Calculation.FormCalculation;
+import com.spk.application.form.Subcriteria.FormsubCriteria;
+import com.spk.asset.menu.Menu;
+import com.spk.asset.menu.MenuAction;
 
 /**
  *
@@ -70,21 +73,41 @@ public class MainForm extends JLayeredPane {
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
-            if (index == 0) {
+//            if (index == 0) {
+//                Application.showForm(new FormDashboard());
+//            } else if (index == 1) {
+//                if (subIndex == 1) {
+//                    Application.showForm(new FormCriteria());
+//                } else if (subIndex == 2) {
+//                    Application.showForm(new FormAlternative());
+//                } else {
+//                    action.cancel();
+//                }
+//            } else if (index == 9) {
+//                Application.logout();
+//            } else {
+//                action.cancel();
+//            }
+
+                if (index == 0) {
                 Application.showForm(new FormDashboard());
-            } else if (index == 1) {
-                if (subIndex == 1) {
-                    Application.showForm(new FormInbox());
-                } else if (subIndex == 2) {
-                    Application.showForm(new FormRead());
+                } else if (index == 1) {
+                   Application.showForm(new FormCriteria());
+                } else if (index == 2) {
+                   Application.showForm(new FormsubCriteria());
+                } else if (index == 3) {
+                   Application.showForm(new FormAlternative());
+                } else if (index == 4) {
+                   Application.showForm(new FormEvaluation());
+                } else if (index == 5) {
+                   Application.showForm(new FormCalculation());
+                } else if (index == 6) {
+                   Application.showForm(new FormDecision());
+                } else if (index == 7) {
+                    Application.logout();
                 } else {
                     action.cancel();
                 }
-            } else if (index == 9) {
-                Application.logout();
-            } else {
-                action.cancel();
-            }
         });
     }
 

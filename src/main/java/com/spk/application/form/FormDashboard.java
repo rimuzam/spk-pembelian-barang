@@ -1,4 +1,4 @@
-package com.spk.application.form.other;
+package com.spk.application.form;
 
 import com.formdev.flatlaf.FlatClientProperties;
 

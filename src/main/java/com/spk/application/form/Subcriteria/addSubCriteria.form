@@ -24,12 +24,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="crazyPanel1" min="-2" pref="414" max="-2" attributes="0"/>
+          <Component id="crazyPanel1" alignment="0" min="-2" pref="414" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="crazyPanel1" min="-2" max="-2" attributes="0"/>
+          <Component id="crazyPanel1" alignment="0" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -46,29 +46,29 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="Title">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tambah Kriteria"/>
+            <Property name="text" type="java.lang.String" value="Tambah Sub Kriteria"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="codeCriteria">
+        <Component class="javax.swing.JLabel" name="codeSubCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Kode Kriteria"/>
+            <Property name="text" type="java.lang.String" value="Kode Sub Kriteria"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txcodeCriteria">
+        <Component class="javax.swing.JTextField" name="txcodeSubCriteria">
         </Component>
-        <Component class="javax.swing.JLabel" name="nameCriteria">
+        <Component class="javax.swing.JLabel" name="nameSubCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nama Kriteria"/>
+            <Property name="text" type="java.lang.String" value="Nama Sub Kriteria"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txnameCriteria">
+        <Component class="javax.swing.JTextField" name="txnameSubCriteria">
         </Component>
-        <Component class="javax.swing.JLabel" name="bobotCriteria">
+        <Component class="javax.swing.JLabel" name="nilaiSubCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Bobot Kriteria"/>
+            <Property name="text" type="java.lang.String" value="Nilai Sub Kriteria"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txbobotCriteria">
+        <Component class="javax.swing.JTextField" name="txnilaiSubCriteria">
         </Component>
         <Component class="javax.swing.JButton" name="btSave">
           <Properties>

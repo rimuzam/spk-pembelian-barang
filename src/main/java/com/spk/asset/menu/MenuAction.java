@@ -1,4 +1,4 @@
-package com.spk.menu;
+package com.spk.asset.menu;
 
 /**
  *

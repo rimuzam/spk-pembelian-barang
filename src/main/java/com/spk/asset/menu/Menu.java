@@ -1,6 +1,6 @@
-package com.spk.menu;
+package com.spk.asset.menu;
 
-import com.spk.menu.mode.LightDarkMode;
+import com.spk.asset.menu.mode.LightDarkMode;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import com.spk.menu.mode.ToolBarAccentColor;
+import com.spk.asset.menu.mode.ToolBarAccentColor;
 
 /**
  *
@@ -27,17 +27,14 @@ public class Menu extends JPanel {
     private final String menuItems[][] = {
         {"~MAIN~"},
         {"Dashboard"},
-        {"~WEB APP~"},
-        {"Email", "Inbox", "Read", "Compost"},
-        {"Chat"},
-        {"Calendar"},
-        {"~COMPONENT~"},
-        {"Advanced UI", "Cropper", "Owl Carousel", "Sweet Alert"},
-        {"Forms", "Basic Elements", "Advanced Elements", "Editors", "Wizard"},
+        {"~SPK~"},
+        {"Kriteria"},
+        {"Sub Kriteria"},
+        {"Alternatif"},
+        {"Penilaian"},
+        {"Perhitungan"},
+        {"Keputusan"},
         {"~OTHER~"},
-        {"Charts", "Apex", "Flot", "Peity", "Sparkline"},
-        {"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
-        {"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
         {"Logout"}
     };
 

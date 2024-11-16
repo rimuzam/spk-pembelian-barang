@@ -1,4 +1,4 @@
-package com.spk.application.form.criteria;
+package com.spk.application.form.Subcriteria;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 
@@ -16,28 +15,21 @@ import javax.swing.UIManager;
  *
  * @author Ridho Multazam
  */
-public class changeCriteria extends javax.swing.JFrame {
+public class changeSubCriteria extends javax.swing.JFrame {
 
     /**
      * Creates new form Test
      */
-    public changeCriteria() {
+    public changeSubCriteria(String kodeSub, String namaSub, double nilaiSub) {
         initComponents();
         new JProgressBar().setIndeterminate(true);
+        
+        // Set the text fields with the provided values
+        txcodeSubCriteria.setText(kodeSub);
+        txnameSubCriteria.setText(namaSub);
+        txnilaiSubCriteria.setText(String.valueOf(nilaiSub));   
     }
     
-    public void setKodeKriteria(String kode) {
-        txcodeCriteria.setText(kode);
-    }
-
-    public void setNamaKriteria(String nama) {
-        txnameCriteria.setText(nama);
-    }
-
-    public void setBobotKriteria(double bobot) {
-        txbobotCriteria.setText(String.valueOf(bobot));
-    }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -50,12 +42,12 @@ public class changeCriteria extends javax.swing.JFrame {
 
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         Title = new javax.swing.JLabel();
-        codeCriteria = new javax.swing.JLabel();
-        txcodeCriteria = new javax.swing.JTextField();
-        nameCriteria = new javax.swing.JLabel();
-        txnameCriteria = new javax.swing.JTextField();
-        bobotCriteria = new javax.swing.JLabel();
-        txbobotCriteria = new javax.swing.JTextField();
+        codeSubCriteria = new javax.swing.JLabel();
+        txcodeSubCriteria = new javax.swing.JTextField();
+        nameSubCriteria = new javax.swing.JLabel();
+        txnameSubCriteria = new javax.swing.JTextField();
+        nilaiSubCriteria = new javax.swing.JLabel();
+        txnilaiSubCriteria = new javax.swing.JTextField();
         btSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -90,20 +82,20 @@ public class changeCriteria extends javax.swing.JFrame {
             }
         ));
 
-        Title.setText("Ubah Kriteria");
+        Title.setText("Ubah Sub Kriteria");
         crazyPanel1.add(Title);
 
-        codeCriteria.setText("Kode Kriteria");
-        crazyPanel1.add(codeCriteria);
-        crazyPanel1.add(txcodeCriteria);
+        codeSubCriteria.setText("Kode Sub Kriteria");
+        crazyPanel1.add(codeSubCriteria);
+        crazyPanel1.add(txcodeSubCriteria);
 
-        nameCriteria.setText("Nama Kriteria");
-        crazyPanel1.add(nameCriteria);
-        crazyPanel1.add(txnameCriteria);
+        nameSubCriteria.setText("Nama Sub Kriteria");
+        crazyPanel1.add(nameSubCriteria);
+        crazyPanel1.add(txnameSubCriteria);
 
-        bobotCriteria.setText("Bobot Kriteria");
-        crazyPanel1.add(bobotCriteria);
-        crazyPanel1.add(txbobotCriteria);
+        nilaiSubCriteria.setText("Nilai Sub Kriteria");
+        crazyPanel1.add(nilaiSubCriteria);
+        crazyPanel1.add(txnilaiSubCriteria);
 
         btSave.setText("Simpan");
         btSave.addActionListener(new java.awt.event.ActionListener() {
@@ -129,37 +121,70 @@ public class changeCriteria extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
-        // TODO add your handling code here:
-        String kode = txcodeCriteria.getText();
-        String nama = txnameCriteria.getText();
-        double bobot = Double.parseDouble(txbobotCriteria.getText()); // Parse bobot as double
+        // Get values from JTextField
+        String kode = txcodeSubCriteria.getText().trim();
+        String nama = txnameSubCriteria.getText().trim();
+        String nilaiStr = txnilaiSubCriteria.getText().trim();
 
-        // Call the method to update the database
-        updateCriteria(kode, nama, bobot);
-    }//GEN-LAST:event_btSaveActionPerformed
+        // Validation for Sub Kriteria Code
+        if (kode.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Kode Sub Kriteria tidak boleh kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            txcodeSubCriteria.requestFocus();
+            return;
+        }
 
-    private void updateCriteria(String kode, String nama, double bobot) {
-        String query = "UPDATE kriteria SET nama_kriteria = ?, bobot_kriteria = ? WHERE kode_kriteria = ?";
+        // Validation for Sub Kriteria Name
+        if (nama.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Nama Sub Kriteria tidak boleh kosong!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            txnameSubCriteria.requestFocus();
+            return;
+        }
+
+        // Validation for Sub Kriteria Value
+        double nilai;
         try {
+            nilai = Double.parseDouble(nilaiStr);
+            if (nilai < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Nilai Sub Kriteria tidak boleh negatif!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txnilaiSubCriteria.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Nilai Sub Kriteria harus berupa angka valid!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            txnilaiSubCriteria.requestFocus();
+            return;
+        }
+
+        // If all validations pass, proceed to save the updated data
+        updateSubCriteria(kode, nama, nilai);
+    }//GEN-LAST:event_btSaveActionPerformed
+    
+    // Method to update sub-criteria in the database
+    private void updateSubCriteria(String kode, String nama, double nilai) {
+        try {
+            // Logic to update the sub-criteria in the database
             Connection conn = Connections.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+            String sql = "UPDATE sub_criteria SET nama_sub = ?, sub_nilai = ? WHERE kode_sub = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, nama);
-            stmt.setDouble(2, bobot);
+            stmt.setDouble(2, nilai);
             stmt.setString(3, kode);
             stmt.executeUpdate();
 
-            // Close connection
             stmt.close();
             Connections.closeConnection(conn);
 
-            JOptionPane.showMessageDialog(this, "Kriteria berhasil diubah.");
-            dispose(); // Close the change form
+            javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil diperbarui!", "Informasi", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            // Optionally reset fields after saving
+            txcodeSubCriteria.setText("");
+            txnameSubCriteria.setText("");
+            txnilaiSubCriteria.setText("");
         } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Gagal mengubah data: " + e.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, "Error saat memperbarui data: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     public static void main(String args[]) {
         FlatRobotoFont.install();
         FlatLaf.registerCustomDefaultsSource("crazypanel");
@@ -175,13 +200,13 @@ public class changeCriteria extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Title;
-    private javax.swing.JLabel bobotCriteria;
     private javax.swing.JButton btSave;
-    private javax.swing.JLabel codeCriteria;
+    private javax.swing.JLabel codeSubCriteria;
     private raven.crazypanel.CrazyPanel crazyPanel1;
-    private javax.swing.JLabel nameCriteria;
-    private javax.swing.JTextField txbobotCriteria;
-    private javax.swing.JTextField txcodeCriteria;
-    private javax.swing.JTextField txnameCriteria;
+    private javax.swing.JLabel nameSubCriteria;
+    private javax.swing.JLabel nilaiSubCriteria;
+    private javax.swing.JTextField txcodeSubCriteria;
+    private javax.swing.JTextField txnameSubCriteria;
+    private javax.swing.JTextField txnilaiSubCriteria;
     // End of variables declaration//GEN-END:variables
 }

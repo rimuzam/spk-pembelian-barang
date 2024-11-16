@@ -3,7 +3,13 @@ package com.spk.application.form.criteria;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.spk.connection.Connections;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 
@@ -112,6 +118,50 @@ public class addCriteria extends javax.swing.JFrame {
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
         // TODO add your handling code here:
+        // Ambil data dari form
+    String kode = txcodeCriteria.getText();
+    String nama = txnameCriteria.getText();
+    String bobotStr = txbobotCriteria.getText();
+    
+    // Validasi input
+    if (kode.isEmpty() || nama.isEmpty() || bobotStr.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Semua field harus diisi!");
+        return;
+    }
+    
+    try {
+        double bobot = Double.parseDouble(bobotStr);  // Konversi string bobot ke double
+        
+        // Koneksi ke database menggunakan kelas Connections
+        Connection conn = Connections.getConnection();
+        
+        // Query insert data ke tabel kriteria
+        String query = "INSERT INTO kriteria (kode_kriteria, nama_kriteria, bobot_kriteria) VALUES (?, ?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        
+        // Set nilai parameter query
+        stmt.setString(1, kode);
+        stmt.setString(2, nama);
+        stmt.setDouble(3, bobot);
+        
+        // Eksekusi query
+        int rowsInserted = stmt.executeUpdate();
+        
+        if (rowsInserted > 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Kriteria berhasil disimpan!");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan kriteria!");
+        }
+        
+        // Tutup koneksi dan statement
+        stmt.close();
+        Connections.closeConnection(conn);
+        
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Bobot harus berupa angka!");
+    } catch (SQLException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Gagal menyimpan data: " + e.getMessage());
+    }
     }//GEN-LAST:event_btSaveActionPerformed
 
     public static void main(String args[]) {

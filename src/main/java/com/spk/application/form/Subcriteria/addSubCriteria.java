@@ -1,9 +1,17 @@
-package com.spk.application.form.criteria;
+package com.spk.application.form.Subcriteria;
 
+import com.spk.application.form.criteria.*;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.spk.connection.Connections;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 
@@ -11,15 +19,19 @@ import javax.swing.UIManager;
  *
  * @author Ridho Multazam
  */
-public class addCriteria extends javax.swing.JFrame {
+public class addSubCriteria extends javax.swing.JFrame {
 
     /**
      * Creates new form Test
      */
-    public addCriteria() {
+    
+    private String kodeKriteria;
+        
+    public addSubCriteria(String kodeKriteria) {
         initComponents();
-        new JProgressBar().setIndeterminate(true);
+        this.kodeKriteria = kodeKriteria;
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,12 +44,12 @@ public class addCriteria extends javax.swing.JFrame {
 
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         Title = new javax.swing.JLabel();
-        codeCriteria = new javax.swing.JLabel();
-        txcodeCriteria = new javax.swing.JTextField();
-        nameCriteria = new javax.swing.JLabel();
-        txnameCriteria = new javax.swing.JTextField();
-        bobotCriteria = new javax.swing.JLabel();
-        txbobotCriteria = new javax.swing.JTextField();
+        codeSubCriteria = new javax.swing.JLabel();
+        txcodeSubCriteria = new javax.swing.JTextField();
+        nameSubCriteria = new javax.swing.JLabel();
+        txnameSubCriteria = new javax.swing.JTextField();
+        nilaiSubCriteria = new javax.swing.JLabel();
+        txnilaiSubCriteria = new javax.swing.JTextField();
         btSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -72,20 +84,20 @@ public class addCriteria extends javax.swing.JFrame {
             }
         ));
 
-        Title.setText("Tambah Kriteria");
+        Title.setText("Tambah Sub Kriteria");
         crazyPanel1.add(Title);
 
-        codeCriteria.setText("Kode Kriteria");
-        crazyPanel1.add(codeCriteria);
-        crazyPanel1.add(txcodeCriteria);
+        codeSubCriteria.setText("Kode Sub Kriteria");
+        crazyPanel1.add(codeSubCriteria);
+        crazyPanel1.add(txcodeSubCriteria);
 
-        nameCriteria.setText("Nama Kriteria");
-        crazyPanel1.add(nameCriteria);
-        crazyPanel1.add(txnameCriteria);
+        nameSubCriteria.setText("Nama Sub Kriteria");
+        crazyPanel1.add(nameSubCriteria);
+        crazyPanel1.add(txnameSubCriteria);
 
-        bobotCriteria.setText("Bobot Kriteria");
-        crazyPanel1.add(bobotCriteria);
-        crazyPanel1.add(txbobotCriteria);
+        nilaiSubCriteria.setText("Nilai Sub Kriteria");
+        crazyPanel1.add(nilaiSubCriteria);
+        crazyPanel1.add(txnilaiSubCriteria);
 
         btSave.setText("Simpan");
         btSave.addActionListener(new java.awt.event.ActionListener() {
@@ -111,9 +123,39 @@ public class addCriteria extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
-        // TODO add your handling code here:
+      String namaSub = txnameSubCriteria.getText().trim();
+        String nilaiSub = txnilaiSubCriteria.getText().trim();
+        
+        if (namaSub.isEmpty() || nilaiSub.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return; // Stop the execution if validation fails
+        }
+        
+        // Save sub-criteria to the database
+        saveSubCriteria(kodeKriteria, txcodeSubCriteria.getText(), namaSub, Double.parseDouble(nilaiSub));
     }//GEN-LAST:event_btSaveActionPerformed
 
+    
+    private void saveSubCriteria(String kodeKriteria, String kodeSub, String namaSub, double subNilai) {
+        try {
+            Connection conn = Connections.getConnection();
+            String sql = "INSERT INTO sub_criteria (kode_kriteria, kode_sub, nama_sub, sub_nilai) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, kodeKriteria);
+            stmt.setString(2, kodeSub);
+            stmt.setString(3, namaSub);
+            stmt.setDouble(4, subNilai);
+            stmt.executeUpdate();
+
+            stmt.close();
+            Connections.closeConnection(conn);
+            javax.swing.JOptionPane.showMessageDialog(this, "Sub Kriteria berhasil disimpan!");
+            this.dispose(); // Close the dialog after saving
+        } catch (SQLException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error while saving Sub Kriteria: " + e.getMessage());
+        }
+    }
+    
     public static void main(String args[]) {
         FlatRobotoFont.install();
         FlatLaf.registerCustomDefaultsSource("crazypanel");
@@ -129,13 +171,13 @@ public class addCriteria extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Title;
-    private javax.swing.JLabel bobotCriteria;
     private javax.swing.JButton btSave;
-    private javax.swing.JLabel codeCriteria;
+    private javax.swing.JLabel codeSubCriteria;
     private raven.crazypanel.CrazyPanel crazyPanel1;
-    private javax.swing.JLabel nameCriteria;
-    private javax.swing.JTextField txbobotCriteria;
-    private javax.swing.JTextField txcodeCriteria;
-    private javax.swing.JTextField txnameCriteria;
+    private javax.swing.JLabel nameSubCriteria;
+    private javax.swing.JLabel nilaiSubCriteria;
+    private javax.swing.JTextField txcodeSubCriteria;
+    private javax.swing.JTextField txnameSubCriteria;
+    private javax.swing.JTextField txnilaiSubCriteria;
     // End of variables declaration//GEN-END:variables
 }
