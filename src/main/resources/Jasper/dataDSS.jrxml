@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="684" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="44b589b9-360b-4d7e-a661-87efdf6dc3dc">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="27"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<queryString>
+		<![CDATA[SELECT
+    s.kode_sub,
+    s.nama_sub,
+    s.sub_nilai,
+    s.kode_kriteria,
+    k.nama_kriteria
+FROM 
+    sub_criteria s
+JOIN 
+    kriteria k ON s.kode_kriteria = k.kode_kriteria
+ORDER BY 
+    s.kode_kriteria, s.kode_sub;]]>
+	</queryString>
+	<field name="kode_sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sub_nilai" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kode_kriteria" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_kriteria" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="71" uuid="dbe6981e-542b-4458-b97d-198b633afc79"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Data Sistem Pendukung Keputusan]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="59">
+			<staticText>
+				<reportElement x="0" y="0" width="199" height="23" uuid="180389e1-ce4f-483c-9884-044b45e96d96"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Alternatif]]></text>
+			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="41" width="199" height="18" uuid="9eb0a6cf-3e7b-45b8-a102-350dbf4a724b"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#666666"/>
+					<topPen lineWidth="0.5" lineColor="#666666"/>
+					<leftPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<rightPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
+				<staticText>
+					<reportElement x="0" y="0" width="99" height="18" forecolor="#000000" uuid="88d77d2a-f102-4892-936e-2c250c40d1d9"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Kode Alternatif]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="99" y="0" width="100" height="18" forecolor="#000000" uuid="98693da0-91fc-4a23-ba3c-b999f0fc6ef5"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nama Alternatif]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="216" y="0" width="263" height="23" uuid="366b4dd0-2eb4-4fe7-a98e-2dc59ed65bf9"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Kriteria]]></text>
+			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="216" y="41" width="263" height="18" uuid="d445290c-bd50-42b8-8f88-6da6ef4d0dad"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#666666"/>
+					<topPen lineWidth="0.5" lineColor="#666666"/>
+					<leftPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<rightPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
+				<staticText>
+					<reportElement x="0" y="0" width="92" height="18" forecolor="#000000" uuid="ae153536-5121-4579-85a4-7496b0c99c5b"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Kode Kriteria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="93" y="0" width="89" height="18" forecolor="#000000" uuid="d74af1b6-6496-41d9-b906-6511fba9ea6a"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nama Kriteria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="182" y="0" width="81" height="18" forecolor="#000000" uuid="d08de3db-f714-45cb-9718-e8852e6f5e35"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Bobot Kriteria]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="500" y="1" width="302" height="23" uuid="df59c3ab-472f-4731-adb7-f2370f4e6983"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Sub Kriteria]]></text>
+			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="500" y="41" width="302" height="18" uuid="a5c2ca46-6cf6-4cdd-a27a-18fd6142f636"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#666666"/>
+					<topPen lineWidth="0.5" lineColor="#666666"/>
+					<leftPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<rightPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
+				<staticText>
+					<reportElement x="0" y="0" width="106" height="18" forecolor="#000000" uuid="a0ee7d5d-4757-4174-a4cf-1a5c301f2dbe"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Kode Sub Kriteria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="0" width="110" height="18" forecolor="#000000" uuid="8cbb6714-614f-40c2-8900-9c4d52efab09"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nama Sub Kriteria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="1" width="86" height="17" forecolor="#000000" uuid="38649d4a-27b2-415c-a121-6facaa76d190"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Bobot Sub Kriteria]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="398">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="199" height="54" uuid="4f73aa4a-84e4-44e4-9b7c-adccf8e46438"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#666666"/>
+					<topPen lineWidth="0.5" lineColor="#666666"/>
+					<leftPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<rightPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
+				<staticText>
+					<reportElement x="0" y="0" width="99" height="18" forecolor="#000000" uuid="394d7501-44dc-47f4-ac9e-672d871e6815"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[A1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="99" y="0" width="100" height="18" forecolor="#000000" uuid="20aa9bf3-4800-44dc-8744-282fb05ab512"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pemasok A]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="18" width="99" height="18" forecolor="#000000" uuid="c8e27c0b-af90-4e81-948a-5cecb76f9961"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[A2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="99" y="18" width="100" height="18" forecolor="#000000" uuid="867a2713-4506-4be6-b94f-db40ece9af9c"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pemasok B]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="36" width="99" height="18" forecolor="#000000" uuid="9d3b78d5-f119-44e6-9a81-0d86740d57f5"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[A3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="99" y="36" width="100" height="18" forecolor="#000000" uuid="dcfbd1ea-1bdb-4ba7-9b11-d11c5aa33667"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pemasok C]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement mode="Opaque" x="216" y="0" width="263" height="125" uuid="f9275a62-2c92-45e0-97cc-db5349d04f08"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#666666"/>
+					<topPen lineWidth="0.5" lineColor="#666666"/>
+					<leftPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<rightPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
+				<staticText>
+					<reportElement x="0" y="17" width="92" height="18" forecolor="#000000" uuid="2733c8aa-be6f-4e8b-8c1b-496e807ee4de"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[K2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="93" y="17" width="89" height="18" forecolor="#000000" uuid="33f47eae-70ae-4428-b784-5b33e5d3b59a"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Biaya]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="182" y="17" width="81" height="18" forecolor="#000000" uuid="4be8be23-c06d-4094-8f9a-c42ad737a121"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="35" width="92" height="18" forecolor="#000000" uuid="10f410b7-ab56-4b77-8623-2936ca420041"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[K3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="93" y="35" width="89" height="18" forecolor="#000000" uuid="d3ce240e-f485-404c-8414-45e805b6feac"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Ketahanan Pasokan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="182" y="35" width="81" height="18" forecolor="#000000" uuid="295eb3b9-107a-4a50-8ac6-397e4fa19260"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.15]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="53" width="92" height="36" forecolor="#000000" uuid="3038334f-d87d-4703-806e-9d403a13079e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[K4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="93" y="53" width="89" height="36" forecolor="#000000" uuid="db98e01f-f83e-4bc3-85cb-885aea67c99f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Keberlanjutan dan Dampak Lingkungan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="92" height="18" forecolor="#000000" uuid="e23fe269-869a-447d-baff-8bf71412d5da"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[K1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="93" y="0" width="89" height="18" forecolor="#000000" uuid="ba43869e-e68e-40e4-bc41-b6ffea80f1de"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Kualitas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="182" y="0" width="81" height="18" forecolor="#000000" uuid="31484e05-0ebb-49c3-8767-17e0f53b6a43"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.25]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="182" y="54" width="81" height="35" forecolor="#000000" uuid="0cd690d6-7e4f-4b9d-9947-4284d1c0e899"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="89" width="92" height="36" forecolor="#000000" uuid="f6f1d373-39f8-4d55-9d8a-5cef48312037"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[K5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="92" y="89" width="89" height="36" forecolor="#000000" uuid="793a92c5-1811-4f34-be23-98927decbb02"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Reputasi dan Keandalan Pemasok]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="181" y="89" width="81" height="36" forecolor="#000000" uuid="1d7945fd-6665-4276-a442-503bab6a07a1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.20]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement mode="Opaque" x="500" y="0" width="302" height="397" uuid="4ecfa401-0f0d-475c-bbd4-870ca8276344"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#666666"/>
+					<topPen lineWidth="0.5" lineColor="#666666"/>
+					<leftPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<rightPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
+				<staticText>
+					<reportElement x="106" y="0" width="110" height="18" forecolor="#000000" uuid="6e60e872-cc68-42bf-8181-5b68fa29c9f7"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Kualitas Tinggi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="1" width="86" height="17" forecolor="#000000" uuid="f3116be0-e3d8-439b-ab78-7a4d5cfff943"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.40]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="17" width="110" height="18" forecolor="#000000" uuid="a366bfb9-7084-4f73-812b-76ffb8f47716"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Kualitas Menengah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="18" width="86" height="17" forecolor="#000000" uuid="6d0c42c3-f708-447b-a715-ff8894465a6b"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="36" width="106" height="18" forecolor="#000000" uuid="4bf5b430-19f7-48b4-a5d3-1063c7ddb559"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S3K1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="36" width="110" height="18" forecolor="#000000" uuid="8a56c057-45cc-41ce-8384-d9e99be57700"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Kualitas Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="37" width="86" height="17" forecolor="#000000" uuid="ece4aba0-2627-4d0d-b2a4-edac38239c36"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.20]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="54" width="106" height="18" forecolor="#000000" uuid="95715a9b-9451-486c-8b2f-863832818214"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S4K1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="54" width="110" height="18" forecolor="#000000" uuid="7da953d9-fbff-432c-8cc1-03e2b8fbe713"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Non-Metalurgi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="55" width="86" height="17" forecolor="#000000" uuid="655b2073-86e3-41f3-b1d2-dad38fb5d5e6"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="72" width="106" height="18" forecolor="#000000" uuid="8a0c805c-4a2e-40e0-be7e-ec759f079dbb"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S1K2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="72" width="110" height="18" forecolor="#000000" uuid="00ac7dba-3619-4174-9f07-0d8ae470d5b4"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Tinggi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="73" width="86" height="17" forecolor="#000000" uuid="6d820dd2-1aac-4541-8872-a9ffebab70e5"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="90" width="106" height="18" forecolor="#000000" uuid="5c0513b1-c8fb-413e-88bc-fa19aae56a20"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S2K2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="90" width="110" height="18" forecolor="#000000" uuid="66560ffb-acb1-48a1-9eb7-6b4eb7eb11fb"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Menengah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="91" width="86" height="17" forecolor="#000000" uuid="ce815d2d-2683-4d77-8c3e-605f46c8a445"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.20]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="108" width="106" height="18" forecolor="#000000" uuid="93939ae4-3740-4d0a-9956-e174be129b4a"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S3K2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="108" width="110" height="18" forecolor="#000000" uuid="7cdbb9d6-f138-4b70-8bd4-d8c93198e8c5"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="109" width="86" height="17" forecolor="#000000" uuid="d1eac212-541d-47f0-91bd-0356cdff85b0"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="126" width="106" height="18" forecolor="#000000" uuid="8e585619-6e0f-476f-b973-4faea0e4f778"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S4K2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="126" width="110" height="18" forecolor="#000000" uuid="6e87b824-807e-4091-8e72-953029ec0267"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Sangat Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="127" width="86" height="17" forecolor="#000000" uuid="2e6a24a1-175c-4421-b771-fb4309e1fa71"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.40]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="144" width="106" height="18" forecolor="#000000" uuid="a6f783d9-34df-4276-87b4-84a04bbfb3aa"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S1K3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="144" width="110" height="18" forecolor="#000000" uuid="87a81e7a-df7c-417a-8062-3af275aac4a9"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pasokan Tinggi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="145" width="86" height="17" forecolor="#000000" uuid="ae642f84-3bb2-4d32-aa08-60e5e4093320"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.40]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="162" width="106" height="18" forecolor="#000000" uuid="a5090fea-a88b-4ed0-88d0-af533e822abd"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S2K3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="162" width="110" height="18" forecolor="#000000" uuid="4e9624bc-4bc0-4a94-a42f-d420be762a00"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pasokan Menengah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="163" width="86" height="17" forecolor="#000000" uuid="03bdce31-1612-406a-b450-5a0b9642db74"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="180" width="106" height="18" forecolor="#000000" uuid="761249f5-eed0-46cb-81da-44747b20859c"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S3K3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="180" width="110" height="18" forecolor="#000000" uuid="3562fd28-0d21-45d8-8fea-0c5ba13e588e"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pasokan Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="181" width="86" height="17" forecolor="#000000" uuid="65dd6cdb-e136-434c-a7ab-7b70ff5f0171"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.20]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="197" width="106" height="37" forecolor="#000000" uuid="7bb4f440-c32f-401a-bf18-85b42b79c758"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S4K3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="197" width="110" height="37" forecolor="#000000" uuid="ed96e6a6-f43d-470a-ad2c-fb544395e026"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Pasokan Sangat Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="198" width="86" height="36" forecolor="#000000" uuid="99bbf933-fc34-45f3-b2d7-71bcf068fd80"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="234" width="106" height="18" forecolor="#000000" uuid="791d7690-5b50-434b-a49f-1d58a9f11134"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S1K4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="252" width="106" height="18" forecolor="#000000" uuid="91fe0552-0c15-479d-9426-6625edcadffc"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S2K4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="270" width="106" height="18" forecolor="#000000" uuid="cf49f6d7-53b2-4de8-8323-e81b54ded074"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S3K4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="288" width="106" height="18" forecolor="#000000" uuid="af0b9b89-26ec-4ad6-8fe1-cf1fbf9b7a19"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S4K4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="306" width="106" height="18" forecolor="#000000" uuid="c8e616ac-7573-4792-b1f9-cdce1ad7cd16"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S1K5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="306" width="110" height="18" forecolor="#000000" uuid="b6316e79-b596-4822-8dc8-4216a2aac086"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Sangat Tinggi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="307" width="86" height="17" forecolor="#000000" uuid="731bbde8-1b9f-46bb-8e35-859f77dc18a0"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.40]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="324" width="106" height="18" forecolor="#000000" uuid="948741cb-7e84-44a1-bcec-39efa55c8326"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S2K5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="325" width="86" height="17" forecolor="#000000" uuid="116039ab-ab62-41e9-9423-3d9b740b054a"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="342" width="106" height="18" forecolor="#000000" uuid="f9a5f3c9-52c7-4bfd-8543-93b4743a7e05"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S3K5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="343" width="86" height="17" forecolor="#000000" uuid="be1b1c2c-4b1f-4c1e-9f24-db3853b6262f"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.15]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="360" width="106" height="18" forecolor="#000000" uuid="61e7a301-aeec-4be8-ba12-578e01cf7746"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S4K5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="361" width="86" height="17" forecolor="#000000" uuid="210dc508-01e4-4baa-829e-5267e2ab02d5"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="1" width="106" height="18" forecolor="#000000" uuid="81e02b72-4916-42ce-8d7d-85fe5425ec3c"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S1K1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="17" width="106" height="18" forecolor="#000000" uuid="d6805240-ef1b-425f-b8e8-c8f2a38d08e2"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S2K1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="288" width="110" height="18" forecolor="#000000" uuid="4e1c2095-d505-40c1-8231-94c3a72185a1"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Sangat Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="270" width="110" height="18" forecolor="#000000" uuid="11bd424f-4c04-40f3-aa60-f4312e91e7c4"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="234" width="110" height="18" forecolor="#000000" uuid="2a412315-cb3c-43fe-9cab-c4c79d244e90"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Tinggi]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="252" width="110" height="18" forecolor="#000000" uuid="3632f73a-84b3-4de6-abea-e11140927534"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Menengah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="252" width="86" height="17" forecolor="#000000" uuid="89b50e50-4614-4036-894e-7e657724ac97"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="235" width="86" height="17" forecolor="#000000" uuid="a3f97644-f27f-4952-91b1-a3991391ff93"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.40]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="271" width="86" height="17" forecolor="#000000" uuid="1b13c113-7231-43a6-ae80-5b1b2f375d59"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.20]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="289" width="86" height="17" forecolor="#000000" uuid="ebda4837-229b-4ae9-b277-0ac2c56c9241"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="216" y="380" width="86" height="17" forecolor="#000000" uuid="6061cc1e-5238-468f-924f-b13d031b2279"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[0.05]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="379" width="106" height="18" forecolor="#000000" uuid="5def6adb-56a4-45f1-8b8b-c1a6cc9a3e4a"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[S5K5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="378" width="110" height="18" forecolor="#000000" uuid="a65ec3c4-b878-4fc0-a4b0-77bf43229777"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Sangat Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="360" width="110" height="18" forecolor="#000000" uuid="8d7f04b7-0b16-4dc3-8c11-afbe7d8390cb"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Rendah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="342" width="110" height="18" forecolor="#000000" uuid="e3a6624b-0d0e-45df-bcfb-d525099243b2"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Menengah]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="324" width="110" height="18" forecolor="#000000" uuid="5b43adbc-02cd-4b6c-93a5-76ddd5b2e066"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Tinggi]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="672" y="66" width="130" height="15" uuid="b3af5d75-b1c2-4644-835b-935545ee8805"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[( ...................................... )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="693" y="0" width="82" height="23" uuid="3cf5299b-74b0-497c-a3ed-bc826a7f93f2"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[16 Desember 2024, Admin]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>

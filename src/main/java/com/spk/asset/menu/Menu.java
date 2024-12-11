@@ -34,8 +34,9 @@ public class Menu extends JPanel {
         {"Penilaian"},
         {"Perhitungan"},
         {"Keputusan"},
+        {"Laporan"},
         {"~OTHER~"},
-        {"Logout"}
+        {"Keluar"}
     };
 
     public boolean isMenuFull() {

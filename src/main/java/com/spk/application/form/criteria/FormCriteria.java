@@ -34,34 +34,23 @@ public class FormCriteria extends javax.swing.JPanel {
     
     // Method untuk memuat data dari database ke JTable
     private void loadDataToTable() {
-        // Inisialisasi model tabel dengan kolom tambahan untuk checkbox
         DefaultTableModel model = (DefaultTableModel) tableCriteria.getModel();
         model.setRowCount(0); // Mengosongkan tabel sebelum menambahkan data baru
 
-        // Query untuk mengambil data dari tabel kriteria
         String query = "SELECT kode_kriteria, nama_kriteria, bobot_kriteria FROM kriteria";
 
-        try {
-            // Mendapatkan koneksi ke database
+        try (
             Connection conn = Connections.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-
-            // Memasukkan data ke tabel
+            ResultSet rs = stmt.executeQuery()
+        ) {
             while (rs.next()) {
                 String kode = rs.getString("kode_kriteria");
                 String nama = rs.getString("nama_kriteria");
                 double bobot = rs.getDouble("bobot_kriteria");
 
-                // Menambahkan data ke tabel dengan nilai default false untuk checkbox
                 model.addRow(new Object[]{false, kode, nama, bobot});
             }
-
-            // Menutup koneksi
-            rs.close();
-            stmt.close();
-            Connections.closeConnection(conn);
-
         } catch (SQLException e) {
             e.printStackTrace();
             javax.swing.JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());

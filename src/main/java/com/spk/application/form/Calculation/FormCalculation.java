@@ -1,10 +1,9 @@
 package com.spk.application.form.Calculation;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.spk.connection.Connections;
 import java.awt.Component;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,12 +29,13 @@ public class FormCalculation extends javax.swing.JPanel {
     public FormCalculation() {
         initComponents();
         applyTableStyle(tableMatrixKeputusanX);
+        applyTableStyle(tableMinmaxMatrixX);
         applyTableStyle(tableNormalisasiMatrixX);
         applyTableStyle(tablePerhitungan);
         loadNormalisasiMatrixX();
+        loadMinmaxMatrixX();
         loadMatrixKeputusanX();
         loadTablePerhitungan();
-
     }
     
     private void applyTableStyle(JTable table) {
@@ -50,7 +50,7 @@ public class FormCalculation extends javax.swing.JPanel {
         table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
         table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
 
-        //  To Create table alignment
+        //  To Create table alignment   
         table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
         table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
     }
@@ -73,14 +73,14 @@ public class FormCalculation extends javax.swing.JPanel {
         };
     }
     
-     private void loadMatrixKeputusanX() {
+    private void loadMatrixKeputusanX() {
         DefaultTableModel model = (DefaultTableModel) tableMatrixKeputusanX.getModel();
-        model.setRowCount(0); // Menghapus semua baris sebelumnya
+        model.setRowCount(0); 
+        model.setColumnCount(0); 
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/spk_pembelian", "root", "");
-             Statement stmt = conn.createStatement()) {
+        try (Connection conn = Connections.getConnection(); 
+         Statement stmt = conn.createStatement())  {
 
-            // Query untuk mendapatkan kriteria unik
             String queryKriteria = "SELECT kode_kriteria FROM kriteria ORDER BY kode_kriteria";
             ResultSet rsKriteria = stmt.executeQuery(queryKriteria);
             List<String> listKriteria = new ArrayList<>();
@@ -89,18 +89,16 @@ public class FormCalculation extends javax.swing.JPanel {
                 listKriteria.add(rsKriteria.getString("kode_kriteria"));
             }
 
-            // Menambahkan kolom sesuai kriteria ke JTable
+            model.addColumn("Nama Alternatif");
             for (String kriteria : listKriteria) {
                 model.addColumn(kriteria);
             }
 
-            // Query untuk mengambil data penilaian
             String query = "SELECT p.kode_alternatif, p.kode_kriteria, p.nilai_sub " +
                            "FROM penilaian p " +
                            "ORDER BY p.kode_alternatif, p.kode_kriteria";
             ResultSet rs = stmt.executeQuery(query);
 
-            // Membuat map untuk mengelompokkan nilai berdasarkan alternatif
             Map<String, Map<String, Double>> dataMap = new LinkedHashMap<>();
 
             while (rs.next()) {
@@ -112,19 +110,16 @@ public class FormCalculation extends javax.swing.JPanel {
                 dataMap.get(alternatif).put(kriteria, nilaiSub);
             }
 
-            // Menyusun data ke dalam tabel
-            int no = 1;
             for (Map.Entry<String, Map<String, Double>> entry : dataMap.entrySet()) {
                 String alternatif = entry.getKey();
                 Map<String, Double> nilaiSubMap = entry.getValue();
 
-                Object[] row = new Object[listKriteria.size() + 2];
-                row[0] = no++; // Nomor
-                row[1] = alternatif; // Nama Alternatif
+                Object[] row = new Object[listKriteria.size() + 1];
+                row[0] = alternatif; 
 
                 for (int i = 0; i < listKriteria.size(); i++) {
                     String kriteria = listKriteria.get(i);
-                    row[i + 2] = nilaiSubMap.getOrDefault(kriteria, 0.0); // Default 0.0 jika tidak ada nilai
+                    row[i + 1] = nilaiSubMap.getOrDefault(kriteria, 0.0); 
                 }
 
                 model.addRow(row);
@@ -134,14 +129,13 @@ public class FormCalculation extends javax.swing.JPanel {
         }
     }
      
-    private void loadNormalisasiMatrixX() {
-        DefaultTableModel model = (DefaultTableModel) tableNormalisasiMatrixX.getModel();
-        model.setRowCount(0); // Menghapus semua baris sebelumnya
+    private void loadMinmaxMatrixX() {
+        DefaultTableModel model = (DefaultTableModel) tableMinmaxMatrixX.getModel();
+        model.setRowCount(0); // Clear previous rows
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/spk_pembelian", "root", "");
-             Statement stmt = conn.createStatement()) {
+         try (Connection conn = Connections.getConnection(); 
+         Statement stmt = conn.createStatement()){
 
-            // Query untuk mendapatkan kriteria unik
             String queryKriteria = "SELECT kode_kriteria FROM kriteria ORDER BY kode_kriteria";
             ResultSet rsKriteria = stmt.executeQuery(queryKriteria);
             List<String> listKriteria = new ArrayList<>();
@@ -150,18 +144,74 @@ public class FormCalculation extends javax.swing.JPanel {
                 listKriteria.add(rsKriteria.getString("kode_kriteria"));
             }
 
-            // Menambahkan kolom sesuai kriteria ke JTable
+            String[] columns = new String[listKriteria.size() + 1];
+            columns[0] = "Nama";
+            for (int i = 0; i < listKriteria.size(); i++) {
+                columns[i + 1] = listKriteria.get(i);
+            }
+            model.setColumnIdentifiers(columns);
+
+            String query = "SELECT p.kode_kriteria, p.nilai_sub FROM penilaian p ORDER BY p.kode_kriteria";
+            ResultSet rs = stmt.executeQuery(query);
+
+            Map<String, List<Double>> nilaiMap = new LinkedHashMap<>();
+
+            while (rs.next()) {
+                String kriteria = rs.getString("kode_kriteria");
+                Double nilaiSub = rs.getDouble("nilai_sub");
+
+                nilaiMap.putIfAbsent(kriteria, new ArrayList<>());
+                nilaiMap.get(kriteria).add(nilaiSub);
+            }
+
+            model.addRow(new Object[] { "Minimum" });
+            model.addRow(new Object[] { "Maximize" });
+
+            for (int i = 0; i < listKriteria.size(); i++) {
+                String kriteria = listKriteria.get(i);
+                List<Double> nilaiSubList = nilaiMap.get(kriteria);
+
+                if (nilaiSubList != null && !nilaiSubList.isEmpty()) {
+                    Double minValue = nilaiSubList.stream().min(Double::compare).orElse(Double.NaN);
+                    Double maxValue = nilaiSubList.stream().max(Double::compare).orElse(Double.NaN);
+
+                    model.setValueAt(minValue, 0, i + 1);  
+
+                    model.setValueAt(maxValue, 1, i + 1);  
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void loadNormalisasiMatrixX() {
+        DefaultTableModel model = (DefaultTableModel) tableNormalisasiMatrixX.getModel();
+        model.setRowCount(0); 
+        model.setColumnCount(0);
+
+        try (Connection conn = Connections.getConnection(); 
+         Statement stmt = conn.createStatement()){
+
+            String queryKriteria = "SELECT kode_kriteria FROM kriteria ORDER BY kode_kriteria";
+            ResultSet rsKriteria = stmt.executeQuery(queryKriteria);
+            List<String> listKriteria = new ArrayList<>();
+
+            while (rsKriteria.next()) {
+                listKriteria.add(rsKriteria.getString("kode_kriteria"));
+            }
+
+            model.addColumn("Nama Alternatif");
             for (String kriteria : listKriteria) {
                 model.addColumn(kriteria);
             }
 
-            // Query untuk mengambil data penilaian
             String query = "SELECT p.kode_alternatif, p.kode_kriteria, p.nilai_sub " +
                            "FROM penilaian p " +
                            "ORDER BY p.kode_alternatif, p.kode_kriteria";
             ResultSet rs = stmt.executeQuery(query);
 
-            // Membuat map untuk mengelompokkan nilai berdasarkan alternatif
             Map<String, Map<String, Double>> dataMap = new LinkedHashMap<>();
             Map<String, Double> maxValues = new LinkedHashMap<>();
             Map<String, Double> minValues = new LinkedHashMap<>();
@@ -174,29 +224,16 @@ public class FormCalculation extends javax.swing.JPanel {
                 dataMap.putIfAbsent(alternatif, new LinkedHashMap<>());
                 dataMap.get(alternatif).put(kriteria, nilaiSub);
 
-                // Cari nilai maksimum untuk normalisasi
                 maxValues.put(kriteria, Math.max(maxValues.getOrDefault(kriteria, Double.MIN_VALUE), nilaiSub));
-                // Cari nilai minimum untuk normalisasi
                 minValues.put(kriteria, Math.min(minValues.getOrDefault(kriteria, Double.MAX_VALUE), nilaiSub));
             }
 
-            // Hapus data lama dari tabel `normalisasi`
-            String deleteQuery = "DELETE FROM normalisasi";
-            stmt.executeUpdate(deleteQuery);
-
-            // Siapkan query untuk menyimpan hasil normalisasi
-            String insertQuery = "INSERT INTO normalisasi (kode_alternatif, kode_kriteria, nilai_normalisasi) VALUES (?, ?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(insertQuery);
-
-            // Menyusun data normalisasi ke dalam tabel dan menyimpannya ke database
-            int no = 1;
             for (Map.Entry<String, Map<String, Double>> entry : dataMap.entrySet()) {
                 String alternatif = entry.getKey();
                 Map<String, Double> nilaiSubMap = entry.getValue();
 
-                Object[] row = new Object[listKriteria.size() + 2];
-                row[0] = no++; // Nomor
-                row[1] = alternatif; // Nama Alternatif
+                Object[] row = new Object[listKriteria.size() + 1];
+                row[0] = alternatif; 
 
                 for (int i = 0; i < listKriteria.size(); i++) {
                     String kriteria = listKriteria.get(i);
@@ -204,41 +241,33 @@ public class FormCalculation extends javax.swing.JPanel {
                     Double maxValue = maxValues.getOrDefault(kriteria, 1.0);
                     Double minValue = minValues.getOrDefault(kriteria, 0.0);
 
-                    // Normalisasi Min-Max
                     double nilaiNormalisasi = 0.0;
-                    if (maxValue != minValue) { // Hindari pembagian dengan 0
+                    if (maxValue != minValue) { 
                         nilaiNormalisasi = (nilaiSub - minValue) / (maxValue - minValue);
                     }
 
-                    row[i + 2] = nilaiNormalisasi;
-
-                    // Simpan hasil normalisasi ke database
-                    pstmt.setString(1, alternatif);
-                    pstmt.setString(2, kriteria);
-                    pstmt.setDouble(3, nilaiNormalisasi);
-                    pstmt.addBatch();
+                    row[i + 1] = nilaiNormalisasi;
                 }
 
                 model.addRow(row);
             }
-
-            // Eksekusi batch penyimpanan data
-            pstmt.executeBatch();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-
     private void loadTablePerhitungan() {
         DefaultTableModel model = (DefaultTableModel) tablePerhitungan.getModel();
-        model.setRowCount(0); // Hapus semua data sebelumnya
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/spk_pembelian", "root", "");
-             Statement stmt = conn.createStatement()) {
+        if (tablePerhitungan.getColumnCount() > 0 && tablePerhitungan.getColumnName(0).equalsIgnoreCase("No")) {
+            tablePerhitungan.removeColumn(tablePerhitungan.getColumnModel().getColumn(0));
+        }
 
-            // Dapatkan kriteria dan bobot
+        model.setRowCount(0); 
+            try (Connection conn = Connections.getConnection(); 
+             Statement stmt = conn.createStatement()){
+
             String queryKriteria = "SELECT kode_kriteria, bobot_kriteria FROM kriteria ORDER BY kode_kriteria";
             ResultSet rsKriteria = stmt.executeQuery(queryKriteria);
             Map<String, Double> bobotKriteria = new LinkedHashMap<>();
@@ -246,7 +275,6 @@ public class FormCalculation extends javax.swing.JPanel {
                 bobotKriteria.put(rsKriteria.getString("kode_kriteria"), rsKriteria.getDouble("bobot_kriteria"));
             }
 
-            // Dapatkan data normalisasi dari tabel `normalisasi`
             String queryNormalisasi = "SELECT kode_alternatif, kode_kriteria, nilai_normalisasi FROM normalisasi ORDER BY kode_alternatif, kode_kriteria";
             ResultSet rsNormalisasi = stmt.executeQuery(queryNormalisasi);
             Map<String, Map<String, Double>> normalisasiMap = new LinkedHashMap<>();
@@ -260,8 +288,6 @@ public class FormCalculation extends javax.swing.JPanel {
                 normalisasiMap.get(alternatif).put(kriteria, nilaiNormalisasi);
             }
 
-            // Hitung preferensi
-            int no = 1;
             for (Map.Entry<String, Map<String, Double>> entry : normalisasiMap.entrySet()) {
                 String alternatif = entry.getKey();
                 Map<String, Double> normalisasi = entry.getValue();
@@ -277,14 +303,12 @@ public class FormCalculation extends javax.swing.JPanel {
                     totalPreferensi += kontribusi;
                 }
 
-                // Hapus "+ " terakhir
                 String perhitungan = perhitunganBuilder.toString();
                 if (perhitungan.endsWith(" + ")) {
                     perhitungan = perhitungan.substring(0, perhitungan.length() - 3);
                 }
 
                 model.addRow(new Object[]{
-                    no++,
                     alternatif,
                     perhitungan,
                     String.format("%.2f", totalPreferensi)
@@ -296,15 +320,12 @@ public class FormCalculation extends javax.swing.JPanel {
         }
     }
 
-
-
     public Map<String, Double> getPreferensi() {
         Map<String, Double> preferensiMap = new LinkedHashMap<>();
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/spk_pembelian", "root", "");
-             Statement stmt = conn.createStatement()) {
+         try (Connection conn = Connections.getConnection(); 
+             Statement stmt = conn.createStatement()){
 
-            // Dapatkan semua kriteria dan bobotnya
             String queryKriteria = "SELECT kode_kriteria, bobot_kriteria FROM kriteria ORDER BY kode_kriteria";
             ResultSet rsKriteria = stmt.executeQuery(queryKriteria);
 
@@ -315,7 +336,6 @@ public class FormCalculation extends javax.swing.JPanel {
                 bobotKriteria.put(kodeKriteria, bobot);
             }
 
-            // Dapatkan nilai normalisasi dari tabel `normalisasi`
             String queryNormalisasi = """
                     SELECT kode_alternatif, kode_kriteria, nilai_normalisasi 
                     FROM normalisasi
@@ -334,7 +354,6 @@ public class FormCalculation extends javax.swing.JPanel {
                 normalisasiMap.get(alternatif).put(kriteria, nilaiNormalisasi);
             }
 
-            // Proses perhitungan preferensi
             for (Map.Entry<String, Map<String, Double>> entry : normalisasiMap.entrySet()) {
                 String alternatif = entry.getKey();
                 Map<String, Double> normalisasi = entry.getValue();
@@ -364,11 +383,12 @@ public class FormCalculation extends javax.swing.JPanel {
     private void initComponents() {
 
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
-        crazyPanel2 = new raven.crazypanel.CrazyPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMatrixKeputusanX = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tableMinmaxMatrixX = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableNormalisasiMatrixX = new javax.swing.JTable();
@@ -381,35 +401,20 @@ public class FormCalculation extends javax.swing.JPanel {
             null
         ));
         crazyPanel1.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
-            "wrap,fill,insets 15",
-            "[fill]",
-            "[grow 0][fill]",
-            null
-        ));
-
-        crazyPanel2.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background",
+            "wrap,fill,insets 10",
+            "[grow,fill]",
+            "[grow,fill]",
             new String[]{
-                "JTextField.placeholderText=Search;background:@background",
-                "background:lighten(@background,8%);borderWidth:1",
-                "background:lighten(@background,8%);borderWidth:1",
-                "background:lighten(@background,8%);borderWidth:1"
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
             }
         ));
-        crazyPanel2.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
-            "",
-            "[]push[][]",
-            "",
-            new String[]{
-                "width 200"
-            }
-        ));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 32)); // NOI18N
-        jLabel1.setText("Perhitungan");
-        crazyPanel2.add(jLabel1);
-
-        crazyPanel1.add(crazyPanel2);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setText("Matrix Keputusan X");
@@ -420,11 +425,11 @@ public class FormCalculation extends javax.swing.JPanel {
 
             },
             new String [] {
-                "No ", "Nama Alternatif"
+                "Nama Alternatif"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -435,6 +440,30 @@ public class FormCalculation extends javax.swing.JPanel {
 
         crazyPanel1.add(jScrollPane1);
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel5.setText("Minimum dan Maksimum Matrix X");
+        crazyPanel1.add(jLabel5);
+
+        tableMinmaxMatrixX.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nama"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(tableMinmaxMatrixX);
+
+        crazyPanel1.add(jScrollPane4);
+
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setText("Normalisasi Matrix X");
         crazyPanel1.add(jLabel3);
@@ -444,11 +473,11 @@ public class FormCalculation extends javax.swing.JPanel {
 
             },
             new String [] {
-                "No ", "Nama Alternatif"
+                "Nama Alternatif"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -468,11 +497,11 @@ public class FormCalculation extends javax.swing.JPanel {
 
             },
             new String [] {
-                "No ", "Nama Alternatif", "Perhitungan", "Total Nilai Preferensi"
+                "Nama Alternatif", "Perhitungan", "Total Nilai Preferensi"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, true
+                false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -496,22 +525,23 @@ public class FormCalculation extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private raven.crazypanel.CrazyPanel crazyPanel1;
-    private raven.crazypanel.CrazyPanel crazyPanel2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable tableMatrixKeputusanX;
+    private javax.swing.JTable tableMinmaxMatrixX;
     private javax.swing.JTable tableNormalisasiMatrixX;
     private javax.swing.JTable tablePerhitungan;
     // End of variables declaration//GEN-END:variables

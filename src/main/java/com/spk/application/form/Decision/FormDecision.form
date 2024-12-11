@@ -62,14 +62,6 @@
                 <Property name="text" type="java.lang.String" value="Keputusan"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="cmdPrint">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Print"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdPrintActionPerformed"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -77,6 +69,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="24" style="0"/>
             </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="Hasil AKhir"/>
           </Properties>
         </Component>

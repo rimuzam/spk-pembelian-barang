@@ -1,13 +1,12 @@
-package com.spk.application.form.Decision;
+    package com.spk.application.form.Decision;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Component;
 import com.spk.application.form.Calculation.FormCalculation;
-import com.spk.asset.ReportCompiler;
+import com.spk.connection.Connections;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
@@ -35,8 +34,6 @@ public class FormDecision extends javax.swing.JPanel {
     }
     
     private void applyTableStyle(JTable table) {
-        cmdPrint.setIcon(new FlatSVGIcon("icon/svg/print.svg", 0.35f));
-        
         //  Change scroll style
         JScrollPane scroll = (JScrollPane) table.getParent().getParent();
         scroll.setBorder(BorderFactory.createEmptyBorder());
@@ -71,18 +68,12 @@ public class FormDecision extends javax.swing.JPanel {
         };
     }
     
-     private void loadDataToTable() {
-        String url = "jdbc:mysql://localhost:3306/spk_pembelian"; // Adjust your database URL
-        String user = "root"; // Database username
-        String password = ""; // Database password
-
+    private void loadDataToTable() {
         DefaultTableModel model = (DefaultTableModel) tableKeputusan.getModel();
-        model.setRowCount(0); // Clear the table before adding new data
+        model.setRowCount(0); 
 
-        // Get preference data
         Map<String, Double> preferensiMap = new FormCalculation().getPreferensi();
 
-        // Sort preferences in descending order
         LinkedHashMap<String, Double> sortedPreferensiMap = preferensiMap.entrySet()
             .stream()
             .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
@@ -95,35 +86,57 @@ public class FormDecision extends javax.swing.JPanel {
 
         int rank = 1;
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Clear the "keputusan" table before inserting new data
+        try (Connection conn = Connections.getConnection()) {
+            if (conn == null) {
+                System.err.println("Failed to establish database connection.");
+                return;
+            }
+
             String clearQuery = "DELETE FROM keputusan";
             try (Statement stmt = conn.createStatement()) {
                 stmt.executeUpdate(clearQuery);
             }
 
-            // Insert sorted data into the database and table
-            String insertQuery = "INSERT INTO keputusan (nama_alternatif, nilai_preferensi, ranking) VALUES (?, ?, ?)";
+            String insertQuery = "INSERT INTO keputusan (kode_alternatif, nama_alternatif, nilai_preferensi, ranking) VALUES (?, ?, ?, ?)";
             try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
                 for (Map.Entry<String, Double> entry : sortedPreferensiMap.entrySet()) {
-                    String namaAlternatif = entry.getKey();
+                    String kodeAlternatif = entry.getKey();
                     double nilaiPreferensi = entry.getValue();
 
-                    // Insert the data into the database
-                    ps.setString(1, namaAlternatif);
-                    ps.setDouble(2, nilaiPreferensi);
-                    ps.setInt(3, rank);
-                    ps.addBatch(); // Add to batch for efficiency
+                    String namaAlternatif = getNamaAlternatifByKode(conn, kodeAlternatif);
 
-                    // Add the data to the table model
+                    if (namaAlternatif == null) {
+                        System.err.println("Nama alternatif untuk kode " + kodeAlternatif + " tidak ditemukan!");
+                        continue;
+                    }
+
+                    ps.setString(1, kodeAlternatif);
+                    ps.setString(2, namaAlternatif);
+                    ps.setDouble(3, nilaiPreferensi);
+                    ps.setInt(4, rank);
+                    ps.addBatch();
+
                     model.addRow(new Object[]{namaAlternatif, nilaiPreferensi, rank});
                     rank++;
                 }
-                ps.executeBatch(); // Execute all batched insert operations
+                ps.executeBatch();
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle SQL exceptions properly
+            e.printStackTrace();
         }
+    }
+
+    private String getNamaAlternatifByKode(Connection conn, String kodeAlternatif) throws SQLException {
+        String query = "SELECT nama_alternatif FROM alternatif WHERE kode_alternatif = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, kodeAlternatif);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("nama_alternatif");
+                }
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -133,7 +146,6 @@ public class FormDecision extends javax.swing.JPanel {
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
         jLabel1 = new javax.swing.JLabel();
-        cmdPrint = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableKeputusan = new javax.swing.JTable();
@@ -171,17 +183,10 @@ public class FormDecision extends javax.swing.JPanel {
         jLabel1.setText("Keputusan");
         crazyPanel2.add(jLabel1);
 
-        cmdPrint.setText("Print");
-        cmdPrint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdPrintActionPerformed(evt);
-            }
-        });
-        crazyPanel2.add(cmdPrint);
-
         crazyPanel1.add(crazyPanel2);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Hasil AKhir");
         crazyPanel1.add(jLabel2);
 
@@ -223,12 +228,7 @@ public class FormDecision extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmdPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPrintActionPerformed
-        new ReportCompiler().print("Decision.jasper");
-    }//GEN-LAST:event_cmdPrintActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cmdPrint;
     private raven.crazypanel.CrazyPanel crazyPanel1;
     private raven.crazypanel.CrazyPanel crazyPanel2;
     private javax.swing.JLabel jLabel1;

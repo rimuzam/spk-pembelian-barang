@@ -3,11 +3,13 @@ package com.spk.application.form.alternative;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.spk.connection.Connections;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
@@ -16,46 +18,37 @@ import javax.swing.UIManager;
  *
  * @author Ridho Multazam
  */
-public class addAlternative extends javax.swing.JFrame {
-
+public class changeAlternative extends javax.swing.JFrame {
+    private String kodeAlternatif;
+    
     /**
      * Creates new form Test
      */
-    public addAlternative() {
+    public changeAlternative(String kodeAlternatif) {
+        this.kodeAlternatif = kodeAlternatif;
         initComponents();
-        new JProgressBar().setIndeterminate(true);
+        loadAlternativeData();
     }
     
-    // Generate the next available kode_alternatif
-    private String generateNextKodeAlternatif(Connection conn) {
-        try {
-            // Query to select existing kode_alternatif in ascending order
-            String query = "SELECT kode_alternatif FROM alternatif ORDER BY kode_alternatif ASC";
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            int nextNumber = 1;
-            while (rs.next()) {
-                String kode = rs.getString("kode_alternatif").substring(1); // Remove 'A' prefix
-                int num = Integer.parseInt(kode);
-
-                if (num == nextNumber) {
-                    nextNumber++; // Increment if the number exists
-                } else {
-                    break; // Gap found
+    private void loadAlternativeData() {
+        try (
+            Connection conn = Connections.getConnection()
+        ) {
+            String query = "SELECT nama_alternatif FROM alternatif WHERE kode_alternatif = ?";
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, kodeAlternatif);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String namaAlternatif = rs.getString("nama_alternatif");
+                        txnameAlternative.setText(namaAlternatif);
+                    }
                 }
             }
-
-            return "A" + nextNumber;
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error generating kode_alternatif: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-            return null;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    
-
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,7 +88,7 @@ public class addAlternative extends javax.swing.JFrame {
             }
         ));
 
-        Title.setText("Tambah Alternatif");
+        Title.setText("Ubah Alternatif");
         crazyPanel1.add(Title);
 
         nameAlternative.setText("Nama Alternatif");
@@ -126,44 +119,31 @@ public class addAlternative extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
-        String namaAlternatif = txnameAlternative.getText().trim();
+        String newName = txnameAlternative.getText().trim();
 
-        // Validate input
-        if (namaAlternatif.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nama alternatif tidak boleh kosong.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        if (newName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama Alternatif tidak boleh kosong.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        try {
-            // Database connection
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/spk_pembelian", "root", "");
+        try (
+            Connection conn = Connections.getConnection()
+        ) {
+            String query = "UPDATE alternatif SET nama_alternatif = ? WHERE kode_alternatif = ?";
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, newName);
+                ps.setString(2, kodeAlternatif);
 
-            // Get the next available kode_alternatif
-            String nextKodeAlternatif = generateNextKodeAlternatif(conn);
-            if (nextKodeAlternatif == null) {
-                JOptionPane.showMessageDialog(this, "Gagal menghasilkan kode alternatif baru.", "Database Error", JOptionPane.ERROR_MESSAGE);
-                conn.close();
-                return;
+                int rowsUpdated = ps.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(this, "Alternatif berhasil diperbarui.");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal memperbarui alternatif.", "Update Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
-            // Insert new alternative into the database
-            String insertQuery = "INSERT INTO alternatif (kode_alternatif, nama_alternatif) VALUES (?, ?)";
-            PreparedStatement psInsert = conn.prepareStatement(insertQuery);
-            psInsert.setString(1, nextKodeAlternatif);
-            psInsert.setString(2, namaAlternatif);
-
-            // Execute query
-            psInsert.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Alternatif berhasil disimpan.", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-            // Close connection
-            conn.close();
-
-            // Clear input after saving
-            txnameAlternative.setText("");
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btSaveActionPerformed

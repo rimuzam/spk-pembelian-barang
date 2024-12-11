@@ -3,6 +3,7 @@ package com.spk.application.form;
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 import com.spk.application.Application;
+import com.spk.connection.Connections;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -88,17 +89,17 @@ public class LoginForm extends javax.swing.JPanel {
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
         String username = txtUser.getText();
         String password = new String(txtPass.getPassword());
-        
+
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Username atau Password tidak boleh kosong", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            try (Connection conn = Application.connectDB()) {
+            try (Connection conn = Connections.getConnection()) { // Menggunakan Connections.getConnection()
                 String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, username);
                 stmt.setString(2, password);
                 ResultSet rs = stmt.executeQuery();
-                
+
                 if (rs.next()) {
                     Application.login(); // Berhasil login
                 } else {

@@ -24,7 +24,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="crazyPanel1" min="-2" pref="468" max="-2" attributes="0"/>
+          <Component id="crazyPanel1" alignment="0" min="-2" pref="468" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -46,7 +46,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="Title">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tambah Alternatif"/>
+            <Property name="text" type="java.lang.String" value="Ubah Alternatif"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="nameAlternative">

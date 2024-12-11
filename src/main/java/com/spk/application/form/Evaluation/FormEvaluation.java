@@ -43,54 +43,42 @@ public class FormEvaluation extends javax.swing.JPanel {
                 + "font:$h1.font");
     }
     
-    private void loadAlternatives() {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+  private void loadAlternatives() {
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+        comboBoxModel.addElement("Pilih alternatif");
 
-        try {
-            connection = Connections.getConnection();
-            String sql = "SELECT kode_alternatif, nama_alternatif FROM alternatif";
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
+        String sql = "SELECT kode_alternatif, nama_alternatif FROM alternatif";
 
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            model.addElement("Pilih alternatif");
-
+        try (
+            Connection connection = Connections.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+        ) {
             while (rs.next()) {
                 String kodeAlternatif = rs.getString("kode_alternatif");
                 String namaAlternatif = rs.getString("nama_alternatif");
-                model.addElement(kodeAlternatif + " - " + namaAlternatif);
+                comboBoxModel.addElement(kodeAlternatif + " - " + namaAlternatif);
             }
 
-            jComboBox1.setModel(model);
+            jComboBox1.setModel(comboBoxModel);
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error loading alternatives: " + e.getMessage(),
                     "Database Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace(); // Logging untuk debugging
         }
     }
     
     private void loadCriteriaAndSubCriteria(String kodeAlternatif) {
-        // Check if the panel for the given alternative already exists
         if (criteriaPanels.containsKey(kodeAlternatif)) {
-            // Clear crazyPanel3 and add the existing panel for the alternative
             crazyPanel3.removeAll();
             crazyPanel3.add(criteriaPanels.get(kodeAlternatif), BorderLayout.NORTH);
         } else {
-            // Create a new panel with GridBagLayout for the new alternative
             JPanel panel = new JPanel(new GridBagLayout());
-            panel.setOpaque(false); // Make the main panel transparent
+            panel.setOpaque(false); 
 
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(10, 5, 10, 5); // Add padding around components
+            gbc.insets = new Insets(10, 5, 10, 5); 
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.weightx = 1.0;
             gbc.gridx = 0;
@@ -107,25 +95,22 @@ public class FormEvaluation extends javax.swing.JPanel {
                     String namaKriteria = rsKriteria.getString("nama_kriteria");
                     double bobotKriteria = rsKriteria.getDouble("bobot_kriteria");
 
-                    // Add the label for each criterion
                     JLabel label = new JLabel(namaKriteria + " (Bobot: " + bobotKriteria + ")");
-                    label.setOpaque(false); // Make label transparent
+                    label.setOpaque(false); 
                     gbc.gridy = row++;
                     gbc.anchor = GridBagConstraints.WEST;
                     panel.add(label, gbc);
 
-                    // Add the ComboBox below the label
                     JComboBox<Entry<String, String>> subCriteriaComboBox = new JComboBox<>();
-                    subCriteriaComboBox.setOpaque(false); // Make combo box transparent
+                    subCriteriaComboBox.setOpaque(false); 
                     loadSubCriteriaWithCode(kodeKriteria, subCriteriaComboBox);
 
-                    // Set renderer to only display nama_sub
                     subCriteriaComboBox.setRenderer(new DefaultListCellRenderer() {
                         @Override
                         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                             if (value instanceof Entry) {
-                                setText(((Entry<String, String>) value).getValue()); // Display nama_sub only
+                                setText(((Entry<String, String>) value).getValue()); 
                             }
                             return this;
                         }
@@ -134,13 +119,12 @@ public class FormEvaluation extends javax.swing.JPanel {
                     gbc.gridy = row++;
                     panel.add(subCriteriaComboBox, gbc);
 
-                    // Listener to store selected data including kode_sub
                     subCriteriaComboBox.addActionListener(e -> {
                         Entry<String, String> selectedEntry = (Entry<String, String>) subCriteriaComboBox.getSelectedItem();
                         if (selectedEntry != null) {
                             String kodeSub = selectedEntry.getKey();
                             String namaSub = selectedEntry.getValue();
-                            criteriaData.put(kodeKriteria, kodeSub); // Store kode_sub instead of nama_sub
+                            criteriaData.put(kodeKriteria, kodeSub); 
                             System.out.println("Selected Kode Sub: " + kodeSub + ", Nama Sub: " + namaSub); // Debugging line
                         }
                     });
@@ -151,24 +135,20 @@ public class FormEvaluation extends javax.swing.JPanel {
                         "Database Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            // Add the "Simpan" button to save the data
             JButton btSave = new JButton("Simpan");
-            btSave.setPreferredSize(new Dimension(72, 23)); // Set button size to 72x23
+            btSave.setPreferredSize(new Dimension(50, 30));
             btSave.addActionListener(e -> {
-                // Add your save logic here, for example, save the data to the database
                 saveCriteriaData(kodeAlternatif, criteriaData);
             });
-            gbc.gridy = 100; // Adjust to place the button at the bottom of the panel
+            gbc.gridy = 100; 
             panel.add(btSave, gbc);
 
-            // Save the panel and data for future reference
             criteriaPanels.put(kodeAlternatif, panel);
             alternativeData.put(kodeAlternatif, criteriaData);
 
-            // Clear crazyPanel3, set layout, and add new panel to the top
             crazyPanel3.removeAll();
             crazyPanel3.setLayout(new BorderLayout());
-            crazyPanel3.add(panel, BorderLayout.NORTH); // Position at the top of crazyPanel3
+            crazyPanel3.add(panel, BorderLayout.NORTH);
         }
 
         crazyPanel3.revalidate();
@@ -183,7 +163,7 @@ public class FormEvaluation extends javax.swing.JPanel {
             psSub.setString(1, kodeKriteria);
             ResultSet rsSub = psSub.executeQuery();
 
-            subCriteriaComboBox.addItem(new SimpleEntry<>("", "Pilih sub-kriteria")); // Default item
+            subCriteriaComboBox.addItem(new SimpleEntry<>("", "Pilih sub-kriteria"));
 
             while (rsSub.next()) {
                 String kodeSub = rsSub.getString("kode_sub");
@@ -199,19 +179,21 @@ public class FormEvaluation extends javax.swing.JPanel {
     
 
    private void saveCriteriaData(String kodeAlternatif, Map<String, String> criteriaData) {
+        for (Map.Entry<String, String> entry : criteriaData.entrySet()) {
+            String kodeSub = entry.getValue();
+            if (kodeSub == null || kodeSub.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Semua sub-kriteria harus dipilih!", 
+                        "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                return; 
+            }
+        }
+
         try (Connection connection = Connections.getConnection()) {
             System.out.println("Saving criteria data for: " + kodeAlternatif);
 
-            // Loop for validating and saving each criterion
             for (Map.Entry<String, String> entry : criteriaData.entrySet()) {
                 String kodeKriteria = entry.getKey();
                 String kodeSub = entry.getValue();
-
-                if (kodeSub == null || kodeSub.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Sub-kriteria tidak boleh kosong!", 
-                            "Kesalahan", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
 
                 if (!isValidSubCriteria(kodeKriteria, kodeSub)) {
                     JOptionPane.showMessageDialog(this, "Sub-kriteria atau Kriteria tidak valid!", 
@@ -223,7 +205,6 @@ public class FormEvaluation extends javax.swing.JPanel {
                 double bobotKriteria = getCriterionWeight(kodeKriteria);
                 double nilaiKriteria = nilaiSub * bobotKriteria;
 
-                // Check if record exists and update it (instead of delete)
                 String updateSql = "UPDATE penilaian SET kode_sub = ?, nilai_sub = ?, bobot_kriteria = ?, nilai_kriteria = ? "
                                    + "WHERE kode_alternatif = ? AND kode_kriteria = ?";
                 try (PreparedStatement updatePs = connection.prepareStatement(updateSql)) {
@@ -236,7 +217,6 @@ public class FormEvaluation extends javax.swing.JPanel {
 
                     int rowsUpdated = updatePs.executeUpdate();
                     if (rowsUpdated == 0) {
-                        // If no rows were updated, insert new data
                         String insertSql = "INSERT INTO penilaian (kode_alternatif, kode_kriteria, kode_sub, nilai_sub, bobot_kriteria, nilai_kriteria) "
                                          + "VALUES (?, ?, ?, ?, ?, ?)";
                         try (PreparedStatement insertPs = connection.prepareStatement(insertSql)) {
@@ -259,16 +239,15 @@ public class FormEvaluation extends javax.swing.JPanel {
         }
     }
 
-    // Memeriksa validitas kode_sub terhadap tabel sub_criteria
     private boolean isValidSubCriteria(String kodeKriteria, String kodeSub) {
         try (Connection connection = Connections.getConnection()) {
             String sql = "SELECT COUNT(*) FROM sub_criteria WHERE kode_kriteria = ? AND kode_sub = ?";
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.setString(1, kodeKriteria);  // Memasukkan kode_kriteria
-                ps.setString(2, kodeSub);  // Memasukkan kode_sub
+                ps.setString(1, kodeKriteria);  
+                ps.setString(2, kodeSub); 
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
-                    return rs.getInt(1) > 0;  // Mengembalikan true jika ada data yang cocok
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
@@ -279,7 +258,6 @@ public class FormEvaluation extends javax.swing.JPanel {
     }
 
     
-    // Retrieve the nilai_sub for the selected sub-criteria
     private double getSubCriteriaValue(String kodeKriteria, String kodeSub) {
         double nilaiSub = 0;
         try (Connection connection = Connections.getConnection()) {
@@ -299,7 +277,6 @@ public class FormEvaluation extends javax.swing.JPanel {
         return nilaiSub;
     }
 
-    // Retrieve the bobot_kriteria for the selected criterion
     private double getCriterionWeight(String kodeKriteria) {
         double bobotKriteria = 0;
         try (Connection connection = Connections.getConnection()) {

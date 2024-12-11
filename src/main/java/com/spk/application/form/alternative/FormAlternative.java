@@ -2,12 +2,13 @@ package com.spk.application.form.alternative;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.spk.connection.Connections;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,30 +35,25 @@ public class FormAlternative extends javax.swing.JPanel {
     
      private void loadAlternatives() {
         DefaultTableModel model = (DefaultTableModel) tableAlternative.getModel();
-        model.setRowCount(0); 
+        model.setRowCount(0); // Mengosongkan tabel sebelum menambahkan data baru
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/spk_pembelian", "root", "");
+        String query = "SELECT kode_alternatif, nama_alternatif FROM alternatif ORDER BY kode_alternatif ASC";
 
-            // Query to select existing alternatives
-            String query = "SELECT kode_alternatif, nama_alternatif FROM alternatif ORDER BY kode_alternatif ASC";
+        try (
+            Connection conn = Connections.getConnection();
             PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
+            ResultSet rs = ps.executeQuery()
+        ) {
             while (rs.next()) {
                 String kodeAlternatif = rs.getString("kode_alternatif");
                 String namaAlternatif = rs.getString("nama_alternatif");
                 model.addRow(new Object[]{false, kodeAlternatif, namaAlternatif, "", ""});
             }
-
-            conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    
-    
+   
     private void applyTableStyle(JTable table) {
 
         cmdAdd.setIcon(new FlatSVGIcon("icon/svg/add.svg", 0.35f));
@@ -176,6 +172,11 @@ public class FormAlternative extends javax.swing.JPanel {
         crazyPanel2.add(cmdAdd);
 
         cmdUpdate.setText("Ubah");
+        cmdUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdUpdateActionPerformed(evt);
+            }
+        });
         crazyPanel2.add(cmdUpdate);
 
         cmdDelete.setText("Hapus");
@@ -221,14 +222,14 @@ public class FormAlternative extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -237,53 +238,57 @@ public class FormAlternative extends javax.swing.JPanel {
         // TODO add your handling code here:
         addAlternative a = new addAlternative();
         a.setVisible(true);
-
     }//GEN-LAST:event_cmdAddActionPerformed
 
     private void cmdDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDeleteActionPerformed
-        // Get the selected row index
-        int selectedRow = tableAlternative.getSelectedRow();
+       int selectedRow = tableAlternative.getSelectedRow();
 
-        // Check if a row is selected
         if (selectedRow != -1) {
-            // Confirm deletion
             int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus alternatif ini?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                // Get the kode_alternatif from the selected row
-                int kodeAlternatif = (int) tableAlternative.getValueAt(selectedRow, 1);
+                String kodeAlternatif = (String) tableAlternative.getValueAt(selectedRow, 1);
 
-                try {
-                    // Connect to the database
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/spk_pembelian", "root", "");
-
-                    // Prepare the delete query
+                try (
+                    Connection conn = Connections.getConnection() // Menggunakan koneksi dari kelas Connections
+                ) {
                     String deleteQuery = "DELETE FROM alternatif WHERE kode_alternatif = ?";
-                    PreparedStatement ps = conn.prepareStatement(deleteQuery);
-                    ps.setInt(1, kodeAlternatif);
+                    try (PreparedStatement ps = conn.prepareStatement(deleteQuery)) {
+                        ps.setString(1, kodeAlternatif);
 
-                    // Execute the delete statement
-                    int rowsDeleted = ps.executeUpdate();
+                        int rowsDeleted = ps.executeUpdate();
 
-                    if (rowsDeleted > 0) {
-                        // Remove the row from the table model
-                        DefaultTableModel model = (DefaultTableModel) tableAlternative.getModel();
-                        model.removeRow(selectedRow);
-                        JOptionPane.showMessageDialog(this, "Alternatif berhasil dihapus.");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Kesalahan: Alternatif tidak dapat dihapus.", "Hapus Kesalahan", JOptionPane.ERROR_MESSAGE);
+                        if (rowsDeleted > 0) {
+                            DefaultTableModel model = (DefaultTableModel) tableAlternative.getModel();
+                            model.removeRow(selectedRow);
+                            JOptionPane.showMessageDialog(this, "Alternatif berhasil dihapus.");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Kesalahan: Alternatif tidak dapat dihapus.", "Hapus Kesalahan", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-
-                    // Close the connection
-                    conn.close();
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select an alternative to delete.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Silakan pilih alternatif untuk dihapus.", "Tidak Ada Seleksi", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_cmdDeleteActionPerformed
+
+    private void cmdUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUpdateActionPerformed
+       int selectedRow = tableAlternative.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String kodeAlternatif = (String) tableAlternative.getValueAt(selectedRow, 1);
+
+            changeAlternative a = new changeAlternative(kodeAlternatif);
+            a.setVisible(true);
+
+            loadAlternatives();
+        } else {
+            JOptionPane.showMessageDialog(this, "Silakan pilih alternatif untuk diperbarui.", "Tidak Ada Seleksi", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_cmdUpdateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdAdd;

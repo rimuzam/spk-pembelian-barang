@@ -21,6 +21,7 @@ import com.spk.application.form.criteria.FormCriteria;
 import com.spk.application.form.alternative.FormAlternative;
 import com.spk.application.form.Evaluation.FormEvaluation;
 import com.spk.application.form.Calculation.FormCalculation;
+import com.spk.application.form.Report.FormReport;
 import com.spk.application.form.Subcriteria.FormsubCriteria;
 import com.spk.asset.menu.Menu;
 import com.spk.asset.menu.MenuAction;
@@ -104,6 +105,8 @@ public class MainForm extends JLayeredPane {
                 } else if (index == 6) {
                    Application.showForm(new FormDecision());
                 } else if (index == 7) {
+                   Application.showForm(new FormReport());   
+                } else if (index == 8) {
                     Application.logout();
                 } else {
                     action.cancel();

@@ -3,11 +3,13 @@ package com.spk.application.form.alternative;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.spk.connection.Connections;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.UIManager;
@@ -26,23 +28,21 @@ public class addAlternative extends javax.swing.JFrame {
         new JProgressBar().setIndeterminate(true);
     }
     
-    // Generate the next available kode_alternatif
     private String generateNextKodeAlternatif(Connection conn) {
         try {
-            // Query to select existing kode_alternatif in ascending order
             String query = "SELECT kode_alternatif FROM alternatif ORDER BY kode_alternatif ASC";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             int nextNumber = 1;
             while (rs.next()) {
-                String kode = rs.getString("kode_alternatif").substring(1); // Remove 'A' prefix
+                String kode = rs.getString("kode_alternatif").substring(1);
                 int num = Integer.parseInt(kode);
 
                 if (num == nextNumber) {
-                    nextNumber++; // Increment if the number exists
+                    nextNumber++;
                 } else {
-                    break; // Gap found
+                    break;
                 }
             }
 
@@ -126,44 +126,35 @@ public class addAlternative extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
-        String namaAlternatif = txnameAlternative.getText().trim();
+         String namaAlternatif = txnameAlternative.getText().trim();
 
-        // Validate input
         if (namaAlternatif.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nama alternatif tidak boleh kosong.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        try {
-            // Database connection
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/spk_pembelian", "root", "");
-
-            // Get the next available kode_alternatif
+        try (
+            Connection conn = Connections.getConnection()
+        ) {
             String nextKodeAlternatif = generateNextKodeAlternatif(conn);
             if (nextKodeAlternatif == null) {
                 JOptionPane.showMessageDialog(this, "Gagal menghasilkan kode alternatif baru.", "Database Error", JOptionPane.ERROR_MESSAGE);
-                conn.close();
                 return;
             }
 
-            // Insert new alternative into the database
             String insertQuery = "INSERT INTO alternatif (kode_alternatif, nama_alternatif) VALUES (?, ?)";
-            PreparedStatement psInsert = conn.prepareStatement(insertQuery);
-            psInsert.setString(1, nextKodeAlternatif);
-            psInsert.setString(2, namaAlternatif);
+            try (PreparedStatement psInsert = conn.prepareStatement(insertQuery)) {
+                psInsert.setString(1, nextKodeAlternatif);
+                psInsert.setString(2, namaAlternatif);
 
-            // Execute query
-            psInsert.executeUpdate();
+                psInsert.executeUpdate();
+            }
 
             JOptionPane.showMessageDialog(this, "Alternatif berhasil disimpan.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            // Close connection
-            conn.close();
-
-            // Clear input after saving
             txnameAlternative.setText("");
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btSaveActionPerformed

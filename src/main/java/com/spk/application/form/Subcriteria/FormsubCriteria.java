@@ -145,12 +145,12 @@ public class FormsubCriteria extends javax.swing.JPanel {
         }
     }
 
-
-    private void applyTableStyle(JTable table) {
+     private void applyTableStyle(JTable table) {
         cmdAdd.setIcon(new FlatSVGIcon("icon/svg/add.svg", 0.35f));
         cmdUpdate.setIcon(new FlatSVGIcon("icon/svg/edit.svg", 0.35f));
         cmdDelete.setIcon(new FlatSVGIcon("icon/svg/delete.svg", 0.35f));
 
+        // Change scroll style
         JScrollPane scroll = (JScrollPane) table.getParent().getParent();
         scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
@@ -161,20 +161,12 @@ public class FormsubCriteria extends javax.swing.JPanel {
         table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
         table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
 
-        // Set renderer untuk setiap kolom menjadi rata tengah
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-        }
-
-        // Set renderer untuk header
+        // Create table alignment
         table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
+        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
     }
 
-
-
-
-
-  private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
+    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
         return new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -186,7 +178,7 @@ public class FormsubCriteria extends javax.swing.JPanel {
                     if (column == 3) { // Kolom Nilai adalah kolom ke-3 (indeks 0)
                         label.setHorizontalAlignment(SwingConstants.CENTER);
                     } else {
-                        label.setHorizontalAlignment(SwingConstants.LEFT); // Set default untuk kolom lain
+                        label.setHorizontalAlignment(SwingConstants.CENTER); // Set default untuk kolom lain
                     }
 
                     // Maintain default foreground color for all cells
@@ -201,10 +193,6 @@ public class FormsubCriteria extends javax.swing.JPanel {
         };
     }
 
-
-
-
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -321,7 +309,7 @@ public class FormsubCriteria extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-      // Get selected item from jComboBox1
+        // Get selected item from jComboBox1
         if (jComboBox1.getSelectedItem() != null) {
             selectedKriteria = jComboBox1.getSelectedItem().toString(); // Update the selectedKriteria variable
             String kodeKriteria = selectedKriteria.split(" - ")[0]; // Get kode_kriteria from selection
@@ -339,7 +327,7 @@ public class FormsubCriteria extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdAddActionPerformed
 
     private void cmdUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUpdateActionPerformed
-       // Mengambil indeks baris yang dipilih
+        // Mengambil indeks baris yang dipilih
         int selectedRow = tableSubCriteria.getSelectedRow();
 
         // Memeriksa apakah ada baris yang dipilih
@@ -368,24 +356,19 @@ public class FormsubCriteria extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdUpdateActionPerformed
 
     private void cmdDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDeleteActionPerformed
-        // TODO add your handling code here:
-        // Mengambil indeks baris yang dipilih
         int selectedRow = tableSubCriteria.getSelectedRow();
-
-        // Memeriksa apakah ada baris yang dipilih
+ 
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Silakan pilih sub-kriteria yang ingin dihapus.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Mengambil kode sub-kriteria dari kolom kedua (kode)
         String kodeSub = tableModel.getValueAt(selectedRow, 1).toString();
 
-        // Konfirmasi sebelum penghapusan
         int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus sub-kriteria dengan kode: " + kodeSub + "?", "Konfirmasi Penghapusan", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // Eksekusi penghapusan dari database
+
             try {
                 Connection conn = Connections.getConnection();
                 String sql = "DELETE FROM sub_criteria WHERE kode_sub = ?";
@@ -393,23 +376,22 @@ public class FormsubCriteria extends javax.swing.JPanel {
                 stmt.setString(1, kodeSub);
                 int rowsAffected = stmt.executeUpdate();
 
-                // Memeriksa apakah penghapusan berhasil
+  
                 if (rowsAffected > 0) {
                     JOptionPane.showMessageDialog(this, "Sub-kriteria berhasil dihapus.");
-                    // Menghapus baris dari tabel
+
                     tableModel.removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(this, "Gagal menghapus sub-kriteria. Kode tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                // Tutup sumber daya
+
                 stmt.close();
                 Connections.closeConnection(conn);
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error saat menghapus sub-kriteria: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        
     }//GEN-LAST:event_cmdDeleteActionPerformed
 
     

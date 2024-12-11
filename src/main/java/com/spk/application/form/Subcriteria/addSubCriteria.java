@@ -1,6 +1,5 @@
 package com.spk.application.form.Subcriteria;
 
-import com.spk.application.form.criteria.*;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -8,11 +7,7 @@ import com.spk.connection.Connections;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JProgressBar;
 import javax.swing.UIManager;
 
 /**

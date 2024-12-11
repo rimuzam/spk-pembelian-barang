@@ -35,20 +35,6 @@ public class Application extends javax.swing.JFrame {
         //getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
 //        Notifications.getInstance().setJFrame(this);
     }
-    
-     public static Connection connectDB() {
-        Connection conn = null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/spk_pembelian";
-            String user = "root";
-            String password = "";
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Koneksi Berhasil!");
-        } catch (SQLException e) {
-            System.err.println("Koneksi Gagal: " + e.getMessage());
-        }
-        return conn;
-    }
 
     public static void showForm(Component component) {
         component.applyComponentOrientation(app.getComponentOrientation());

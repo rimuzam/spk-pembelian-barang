@@ -1,131 +1,25 @@
-package com.spk.application.form.Decision;
+package com.spk.application.form.Report;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import java.awt.Component;
-import com.spk.application.form.Calculation.FormCalculation;
 import com.spk.asset.ReportCompiler;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+import java.awt.Color;
 
 /**
  *
  * @author Ridho Multazam
  */
-public class FormDecision extends javax.swing.JPanel {
+public class FormReport extends javax.swing.JPanel {
 
-    public FormDecision() {
+    public FormReport() {
         initComponents();
-        applyTableStyle(tableKeputusan);
-        loadDataToTable();
-    }
-    
-    private void applyTableStyle(JTable table) {
-        cmdPrint.setIcon(new FlatSVGIcon("icon/svg/print.svg", 0.35f));
         
-        //  Change scroll style
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-
-        //  To Create table alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
+        
+        cmdPrint1.setIcon(new FlatSVGIcon("icon/svg/print.svg", 0.35f));
+        cmdPrint2.setIcon(new FlatSVGIcon("icon/svg/print.svg", 0.35f));
+        cmdPrint3.setIcon(new FlatSVGIcon("icon/svg/print.svg", 0.35f));
+        cmdPrint4.setIcon(new FlatSVGIcon("icon/svg/print.svg", 0.35f));
     }
-    
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-
-                    // Center-align all columns
-                    label.setHorizontalAlignment(SwingConstants.CENTER);
-
-                   
-                }
-                return com;
-            }
-        };
-    }
-    
-     private void loadDataToTable() {
-        String url = "jdbc:mysql://localhost:3306/spk_pembelian"; // Adjust your database URL
-        String user = "root"; // Database username
-        String password = ""; // Database password
-
-        DefaultTableModel model = (DefaultTableModel) tableKeputusan.getModel();
-        model.setRowCount(0); // Clear the table before adding new data
-
-        // Get preference data
-        Map<String, Double> preferensiMap = new FormCalculation().getPreferensi();
-
-        // Sort preferences in descending order
-        LinkedHashMap<String, Double> sortedPreferensiMap = preferensiMap.entrySet()
-            .stream()
-            .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (e1, e2) -> e1,
-                LinkedHashMap::new
-            ));
-
-        int rank = 1;
-
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Clear the "keputusan" table before inserting new data
-            String clearQuery = "DELETE FROM keputusan";
-            try (Statement stmt = conn.createStatement()) {
-                stmt.executeUpdate(clearQuery);
-            }
-
-            // Insert sorted data into the database and table
-            String insertQuery = "INSERT INTO keputusan (nama_alternatif, nilai_preferensi, ranking) VALUES (?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
-                for (Map.Entry<String, Double> entry : sortedPreferensiMap.entrySet()) {
-                    String namaAlternatif = entry.getKey();
-                    double nilaiPreferensi = entry.getValue();
-
-                    // Insert the data into the database
-                    ps.setString(1, namaAlternatif);
-                    ps.setDouble(2, nilaiPreferensi);
-                    ps.setInt(3, rank);
-                    ps.addBatch(); // Add to batch for efficiency
-
-                    // Add the data to the table model
-                    model.addRow(new Object[]{namaAlternatif, nilaiPreferensi, rank});
-                    rank++;
-                }
-                ps.executeBatch(); // Execute all batched insert operations
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle SQL exceptions properly
-        }
-    }
-
+ 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -133,10 +27,18 @@ public class FormDecision extends javax.swing.JPanel {
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
         jLabel1 = new javax.swing.JLabel();
-        cmdPrint = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tableKeputusan = new javax.swing.JTable();
+        crazyPanel3 = new raven.crazypanel.CrazyPanel();
+        jLabel3 = new javax.swing.JLabel();
+        cmdPrint1 = new javax.swing.JButton();
+        crazyPanel4 = new raven.crazypanel.CrazyPanel();
+        jLabel4 = new javax.swing.JLabel();
+        cmdPrint2 = new javax.swing.JButton();
+        crazyPanel5 = new raven.crazypanel.CrazyPanel();
+        jLabel5 = new javax.swing.JLabel();
+        cmdPrint3 = new javax.swing.JButton();
+        crazyPanel6 = new raven.crazypanel.CrazyPanel();
+        jLabel6 = new javax.swing.JLabel();
+        cmdPrint4 = new javax.swing.JButton();
 
         crazyPanel1.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
@@ -168,42 +70,140 @@ public class FormDecision extends javax.swing.JPanel {
         ));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 32)); // NOI18N
-        jLabel1.setText("Keputusan");
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText("Laporan");
+        jLabel1.setToolTipText("");
         crazyPanel2.add(jLabel1);
-
-        cmdPrint.setText("Print");
-        cmdPrint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdPrintActionPerformed(evt);
-            }
-        });
-        crazyPanel2.add(cmdPrint);
 
         crazyPanel1.add(crazyPanel2);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel2.setText("Hasil AKhir");
-        crazyPanel1.add(jLabel2);
-
-        tableKeputusan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nama Alternatif", "Nilai Preferensi", "Ranking"
+        crazyPanel3.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background",
+            new String[]{
+                "JTextField.placeholderText=Search;background:@background",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
+        ));
+        crazyPanel3.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "",
+            "[]push[][]",
+            "",
+            new String[]{
+                "width 200"
+            }
+        ));
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setText("Data SPK");
+        crazyPanel3.add(jLabel3);
+
+        cmdPrint1.setText("Cetak");
+        cmdPrint1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdPrint1ActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(tableKeputusan);
+        crazyPanel3.add(cmdPrint1);
 
-        crazyPanel1.add(jScrollPane1);
+        crazyPanel1.add(crazyPanel3);
+
+        crazyPanel4.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background",
+            new String[]{
+                "JTextField.placeholderText=Search;background:@background",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1"
+            }
+        ));
+        crazyPanel4.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "",
+            "[]push[][]",
+            "",
+            new String[]{
+                "width 200"
+            }
+        ));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel4.setText("Penilaian");
+        crazyPanel4.add(jLabel4);
+
+        cmdPrint2.setText("Cetak");
+        cmdPrint2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdPrint2ActionPerformed(evt);
+            }
+        });
+        crazyPanel4.add(cmdPrint2);
+
+        crazyPanel1.add(crazyPanel4);
+
+        crazyPanel5.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background",
+            new String[]{
+                "JTextField.placeholderText=Search;background:@background",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1"
+            }
+        ));
+        crazyPanel5.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "",
+            "[]push[][]",
+            "",
+            new String[]{
+                "width 200"
+            }
+        ));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setText("Perhitungan");
+        crazyPanel5.add(jLabel5);
+
+        cmdPrint3.setText("Cetak");
+        cmdPrint3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdPrint3ActionPerformed(evt);
+            }
+        });
+        crazyPanel5.add(cmdPrint3);
+
+        crazyPanel1.add(crazyPanel5);
+
+        crazyPanel6.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background",
+            new String[]{
+                "JTextField.placeholderText=Search;background:@background",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1",
+                "background:lighten(@background,8%);borderWidth:1"
+            }
+        ));
+        crazyPanel6.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "",
+            "[]push[][]",
+            "",
+            new String[]{
+                "width 200"
+            }
+        ));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel6.setText("Keputusan");
+        crazyPanel6.add(jLabel6);
+
+        cmdPrint4.setText("Cetak");
+        cmdPrint4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdPrint4ActionPerformed(evt);
+            }
+        });
+        crazyPanel6.add(cmdPrint4);
+
+        crazyPanel1.add(crazyPanel6);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -223,17 +223,37 @@ public class FormDecision extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmdPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPrintActionPerformed
+    private void cmdPrint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPrint1ActionPerformed
+        new ReportCompiler().print("dataDSS.jasper");
+    }//GEN-LAST:event_cmdPrint1ActionPerformed
+
+    private void cmdPrint2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPrint2ActionPerformed
+        new ReportCompiler().print("Evaluation.jasper");
+    }//GEN-LAST:event_cmdPrint2ActionPerformed
+
+    private void cmdPrint3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPrint3ActionPerformed
+        new ReportCompiler().print("Calculation.jasper");
+    }//GEN-LAST:event_cmdPrint3ActionPerformed
+
+    private void cmdPrint4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPrint4ActionPerformed
         new ReportCompiler().print("Decision.jasper");
-    }//GEN-LAST:event_cmdPrintActionPerformed
+    }//GEN-LAST:event_cmdPrint4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cmdPrint;
+    private javax.swing.JButton cmdPrint1;
+    private javax.swing.JButton cmdPrint2;
+    private javax.swing.JButton cmdPrint3;
+    private javax.swing.JButton cmdPrint4;
     private raven.crazypanel.CrazyPanel crazyPanel1;
     private raven.crazypanel.CrazyPanel crazyPanel2;
+    private raven.crazypanel.CrazyPanel crazyPanel3;
+    private raven.crazypanel.CrazyPanel crazyPanel4;
+    private raven.crazypanel.CrazyPanel crazyPanel5;
+    private raven.crazypanel.CrazyPanel crazyPanel6;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableKeputusan;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     // End of variables declaration//GEN-END:variables
 }

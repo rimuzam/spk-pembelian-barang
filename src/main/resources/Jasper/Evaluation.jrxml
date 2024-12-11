@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a4fac2c1-189a-4bcf-a2ef-18b3fa116dd8">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="33"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[SELECT * 
-FROM keputusan;]]>
+		<![CDATA[SELECT 
+    p.id_penilaian,
+    p.kode_alternatif,
+    p.kode_kriteria,
+    p.kode_sub,
+    p.nilai_sub,
+    p.bobot_kriteria,
+    p.nilai_kriteria,
+    p.nama_alternatif,
+    p.nama_kriteria,
+    p.nama_sub
+FROM 
+    penilaian p;]]>
 	</queryString>
-	<field name="id_keputusan" class="java.lang.Integer">
+	<field name="id_penilaian" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="kode_alternatif" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nilai_preferensi" class="java.math.BigDecimal">
+	<field name="kode_kriteria" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="ranking" class="java.lang.Integer">
+	<field name="kode_sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nilai_sub" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bobot_kriteria" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nilai_kriteria" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="nama_alternatif" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_kriteria" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_sub" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -32,7 +58,7 @@ FROM keputusan;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[Hasil Keputusan]]></text>
+				<text><![CDATA[Penilaian]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -51,25 +77,39 @@ FROM keputusan;]]>
 					<rightPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
 				<staticText>
-					<reportElement x="0" y="0" width="181" height="18" forecolor="#000000" uuid="0c848420-2f6c-4969-81fa-a4e609bc1b75"/>
+					<reportElement x="0" y="0" width="148" height="18" forecolor="#000000" uuid="0c848420-2f6c-4969-81fa-a4e609bc1b75"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Alternatif]]></text>
+					<text><![CDATA[Nama Alternatif]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="394" y="0" width="161" height="18" forecolor="#000000" uuid="e4e9610b-fc43-4883-b57f-baceaf156abe"/>
+					<reportElement x="148" y="0" width="105" height="18" forecolor="#000000" uuid="a594cbed-1b22-4203-8aed-7867b9d116ed"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Ranking]]></text>
+					<text><![CDATA[Nama Kriteria]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="181" y="0" width="213" height="18" forecolor="#000000" uuid="a594cbed-1b22-4203-8aed-7867b9d116ed"/>
+					<reportElement x="364" y="0" width="96" height="18" forecolor="#000000" uuid="b77e875e-5187-49aa-b109-70ffd66c93a4"/>
 					<textElement textAlignment="Center">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Nilai Preferensi]]></text>
+					<text><![CDATA[Nilai Sub]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="0" width="95" height="18" forecolor="#000000" uuid="c815e2fc-2d5b-409c-9e67-c1fff2a0d201"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Bobot Kriteria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="253" y="0" width="111" height="18" forecolor="#000000" uuid="e4e9610b-fc43-4883-b57f-baceaf156abe"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nama Sub]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -86,40 +126,54 @@ FROM keputusan;]]>
 					<rightPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="0" width="181" height="18" uuid="9b64999d-3625-4618-808d-db56d26ba507"/>
+					<reportElement positionType="Float" x="0" y="0" width="148" height="18" uuid="9b64999d-3625-4618-808d-db56d26ba507"/>
 					<textElement textAlignment="Center">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{nama_alternatif}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="394" y="0" width="161" height="18" uuid="ab44ceac-3c8d-49ce-80aa-501fc83da5ea"/>
+					<reportElement positionType="Float" x="253" y="1" width="111" height="18" uuid="ab44ceac-3c8d-49ce-80aa-501fc83da5ea"/>
 					<textElement textAlignment="Center">
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ranking}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nama_sub}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="181" y="0" width="213" height="18" uuid="fb8653c1-8565-4001-8c96-3cb3648c8787"/>
+					<reportElement positionType="Float" x="148" y="1" width="105" height="18" uuid="fb8653c1-8565-4001-8c96-3cb3648c8787"/>
 					<textElement textAlignment="Center">
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{nilai_preferensi}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nama_kriteria}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="460" y="1" width="95" height="18" uuid="631c8483-fec9-4812-a71a-7048378feafb"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bobot_kriteria}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="355" y="1" width="105" height="18" uuid="48f2647b-899a-4a8a-bc2f-f3c1413d6540"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nilai_sub}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="115">
+		<band height="111">
 			<staticText>
-				<reportElement x="444" y="12" width="82" height="23" uuid="60c5ea53-c6a9-40fc-b29e-b3e39e0aff21"/>
+				<reportElement x="443" y="14" width="82" height="23" uuid="66cc81cc-6ac0-4a55-add2-d55d09bf2e9b"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[16 Desember 2024, Admin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="419" y="93" width="130" height="15" uuid="9b4d1ab8-97f0-4206-865c-e411c548f3d4"/>
+				<reportElement x="418" y="95" width="130" height="15" uuid="4d009bb8-ca4e-4b4b-8eb1-3bb0db4441b9"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -127,7 +181,4 @@ FROM keputusan;]]>
 			</staticText>
 		</band>
 	</columnFooter>
-	<summary>
-		<band height="62" splitType="Stretch"/>
-	</summary>
 </jasperReport>
